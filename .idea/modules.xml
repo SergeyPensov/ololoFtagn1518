@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/GrafRuner/GrafRuner.iml" filepath="$PROJECT_DIR$/GrafRuner/GrafRuner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/emulation/emulation.iml" filepath="$PROJECT_DIR$/emulation/emulation.iml" />
       <module fileurl="file://$PROJECT_DIR$/icfp2015.iml" filepath="$PROJECT_DIR$/icfp2015.iml" />
     </modules>
   </component>

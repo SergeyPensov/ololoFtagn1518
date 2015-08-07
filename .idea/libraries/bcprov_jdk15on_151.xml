@@ -19,11 +19,6 @@
       <root url="jar://$PROJECT_DIR$/lib/servlet-api-3.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.7.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/slf4j-jdk14-1.7.7.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/websocket-api-9.2.7.v20150116.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/websocket-client-9.2.7.v20150116.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/websocket-common-9.2.7.v20150116.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/websocket-server-9.2.7.v20150116.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/websocket-servlet-9.2.7.v20150116.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
