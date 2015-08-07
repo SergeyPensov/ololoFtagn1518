@@ -1,0 +1,1 @@
+curl --user plrVW5TJZhcAW/2HmsWBJOnGd2vwab+5Ssq9Y1HVggk= -X POST -H "Content-Type: application/json" -d $OUTPUT https://davar.icfpcontest.org/teams/195/solutions
