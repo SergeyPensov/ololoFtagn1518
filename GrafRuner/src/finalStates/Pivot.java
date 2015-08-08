@@ -4,8 +4,8 @@ package finalStates;
  * @Author Sergey Pensov
  */
 public class Pivot {
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
     public int getX() {
         return x;
