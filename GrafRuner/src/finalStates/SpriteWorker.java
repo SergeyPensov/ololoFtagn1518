@@ -44,12 +44,8 @@ public class SpriteWorker {
         return spriteIndex;
     }
 
-    public SpriteWorker(JSONObject json) {
-        JSONArray members = (JSONArray) json.get("members");
-        JSONObject pivotJson = (JSONObject) json.get("pivot");
-        for (Object member : members) {
-
-        }
+    public SpriteWorker(Unit unit) {
+        sprites[0] = new Sprite(unit);
 
         this.sprites = sprites;
     }

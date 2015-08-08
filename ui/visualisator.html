@@ -102,30 +102,30 @@
             var pivot_y = 2;
 
             var hex_x = 1;
-            var hex_y = 3;
+            var hex_y = 7;
 
             DrawCircle(ToHexX(pivot_x, pivot_y), ToHexY(pivot_y));
             FillHex(ToHexX(hex_x, hex_y), ToHexY(hex_y), hex_r, '#f00');
 
             var pivot_x_d = pivot_x + (pivot_y % 2 == 0 ? 0 : 0.5);
-            var pivot_y_d = pivot_y * Math.sqrt(3) / 3;
+            var pivot_y_d = pivot_y * Math.sqrt(3) / 2;
             console.log("pivot x: " + pivot_x_d);
             console.log("pivot y: " + pivot_y_d);
 
             var hex_x_d = hex_x + ((hex_y % 2 == 0) ? 0 : 0.5);
-            var hex_y_d = hex_y * Math.sqrt(3) / 3;
+            var hex_y_d = hex_y * Math.sqrt(3) / 2;
             console.log("hex x: " + hex_x_d);
             console.log("hex y: " + hex_y_d);
             ////////////////////////////////////////////////////////////////////
             var rlx = hex_x_d - pivot_x_d;
             var rly = hex_y_d - pivot_y_d;
-            var alpha = 2 * Math.PI / 3;
+            var alpha = 5 * Math.PI / 3;
             var rl2x = rlx * Math.cos(alpha) - rly * Math.sin(alpha);
             var rl2y = rlx * Math.sin(alpha) + rly * Math.cos(alpha);
             rl2x += pivot_x_d;
             rl2y += pivot_y_d;
             //////////////////////////////////////////////////////////////
-            hex_y2 = 3 * rl2y / Math.sqrt(3);
+            hex_y2 = 2 * rl2y / Math.sqrt(3);
             console.log("result y2: " + hex_y2);
             hex_y2 = Math.round(hex_y2);
             console.log("result y2: " + hex_y2);
