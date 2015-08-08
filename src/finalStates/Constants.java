@@ -12,6 +12,9 @@ public class Constants {
 
     ///////////////////////////////////    IN MAP /////////////////////////
 
-    public static final int FILL_NUMBER  = -1;
-
+    public static final int FILL_NUMBER = -1;
+    ///////////////////////////////////    SERVER /////////////////////////
+    public static final int PORT = 8080;
+    public static final String HOST = "0.0.0.0";
+    public static final String APIResourceBase = "ui";
 }
