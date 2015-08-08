@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="jquery.js"></script>
+<script src="json2.js"></script>
+
+
+<script src="graphic.js"></script>
+<script src="main.js"></script>
+<style>
+	.control{
+		position: absolute;
+		right: 0;
+		width: 100px;
+	}
+	button{
+		width: 95px;
+	}
+	#command_list{
+		width: 90px;
+		height: 100px;
+	}
+</style>
+</head>
+
+<body>
+	<div class="control">
+		<button id="problem_btn">send problem</button><br/>
+		<br/>
+		<textarea id="command_list"></textarea><br/>
+		<button id="next_btn">next</button><br/>
+		<br/>
+	</div>
+	
+	<canvas  id="paint_canvas" ></canvas>
+</body>
+</html>

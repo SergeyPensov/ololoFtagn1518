@@ -1,20 +1,18 @@
 package finalStates;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 /**
  * @Author Sergey Pensov
  */
 public class SpriteWorker {
     private Sprite[] sprites = new Sprite[6];
     private int spriteIndex = 0;
+    private boolean isTurn;
 
     public Sprite getWorkerSprite() {
         return sprites[spriteIndex];
     }
 
-    public void rc() {
+    private void rc() {
         if (spriteIndex == 5) {
             spriteIndex = 0;
         } else {
@@ -22,7 +20,7 @@ public class SpriteWorker {
         }
     }
 
-    public void rcc() {
+    private void rcc() {
         if (spriteIndex == 0) {
             spriteIndex = 5;
         } else {
@@ -44,13 +42,9 @@ public class SpriteWorker {
         return spriteIndex;
     }
 
-    public SpriteWorker(JSONObject json) {
-        JSONArray members = (JSONArray) json.get("members");
-        JSONObject pivotJson = (JSONObject) json.get("pivot");
-        for (Object member : members) {
+    public SpriteWorker(Unit unit) {
+        sprites[0] = new Sprite(unit);
+        isTurn = false;
 
-        }
-
-        this.sprites = sprites;
     }
 }
