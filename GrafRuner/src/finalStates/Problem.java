@@ -25,4 +25,18 @@ public class Problem {
         Problem prob = read(json);
         System.out.println(prob.id);
     }
+
+    /**
+     * Returns initial board
+     * @return
+     */
+    public Board getBoard() {
+        Board board = new Board(width,height);
+
+        for (Pivot p : filled) {
+            board.setCell(p.x,p.y,1);
+        }
+
+        return board;
+    }
 }

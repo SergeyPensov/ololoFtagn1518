@@ -19,7 +19,15 @@ public class BoardVis {
 //    private final static int zeroCellY = X_STEP;
 
     public BufferedImage draw(Board board, Unit unit,  Unit[] nextUnits) {
-        BufferedImage image;
+
+        // detecting image size
+        FPoint f0 = Board.getCoordsForIndexes(new Pivot(0, 0));
+        FPoint f1 = Board.getCoordsForIndexes(new Pivot(board.width, board.height));
+
+        int width = (int) ((f1.x - f0.x + 1)*SCALE);
+        int height = (int) ((f1.y - f0.y + 1)*SCALE);
+
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 
         return image;
     }
