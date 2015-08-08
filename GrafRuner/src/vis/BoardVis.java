@@ -6,6 +6,7 @@ import finalStates.FPoint;
 import finalStates.Pivot;
 import finalStates.Unit;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -32,10 +33,20 @@ public class BoardVis {
         return image;
     }
 
-    private void drawCell(BufferedImage image, int i, int j) {
+    private void drawCell(Graphics2D gr, int i, int j) {
         FPoint p = Board.getCoordsForIndexes(new Pivot(i,j));
 
         Pivot center = new Pivot( (int)(p.x * SCALE), (int)(p.y * SCALE));
+        final float R = Board.R * SCALE;
 
+        Polygon polygon = new Polygon();
+        for( int v=0; v<6; ++v) {
+            final float a = (float) (2*Math.PI*v/6.0f);
+            int x = center.x + (int) (R * Math.cos(a));
+            int y = center.x + (int) (R * Math.sin(a));
+            polygon.addPoint(x,y);
+        }
+        gr.fillPolygon(polygon);
+        gr.drawPolygon(polygon);
     }
 }

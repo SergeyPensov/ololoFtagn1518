@@ -5,8 +5,8 @@ package finalStates;
  */
 public class Board {
 
-    private static final float R = 1.0f/(float)Math.sqrt(3);
-    private static final float DY = R * 1.5f;
+    public static final float R = 1.0f/(float)Math.sqrt(3);
+    public static final float DY = R * 1.5f;
 
     public int width;
     public int height;
