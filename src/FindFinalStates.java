@@ -1,4 +1,7 @@
-package finalStates;
+import finalStates.HexMap;
+import finalStates.Pivot;
+import finalStates.SpriteWorker;
+import finalStates.Unit;
 
 /**
  * @Author Sergey Pensov
