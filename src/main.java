@@ -1,5 +1,9 @@
+import finalStates.Board;
 import finalStates.Problem;
+import vis.BoardVis;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,7 +51,10 @@ public class main {
             try {
                 final String json = readFile(inputFileName);
                 Problem problem = Problem.read(json);
-                
+                Board board = problem.getBoard();
+                BoardVis vis = new BoardVis();
+                BufferedImage image = vis.draw(board, null, null);
+                ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

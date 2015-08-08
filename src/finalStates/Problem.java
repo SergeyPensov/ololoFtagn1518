@@ -41,4 +41,18 @@ public class Problem {
                 ", sourceSeeds=" + Arrays.toString(sourceSeeds) +
                 '}';
     }
+
+    /**
+     * Returns initial board
+     * @return
+     */
+    public Board getBoard() {
+        Board board = new Board(width,height);
+
+        for (Pivot p : filled) {
+            board.setCell(p.x,p.y,1);
+        }
+
+        return board;
+    }
 }
