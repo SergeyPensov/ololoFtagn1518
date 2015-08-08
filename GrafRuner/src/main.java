@@ -55,7 +55,7 @@ public class main {
                 Board board = problem.getBoard();
                 BoardVis vis = new BoardVis();
                 BufferedImage image = vis.draw(board, null, null);
-                ImageIO.write(image, "png", new File("c:\\Temp\\board.png"));
+                ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
