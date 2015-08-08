@@ -9,12 +9,13 @@ import org.json.simple.JSONObject;
 public class SpriteWorker {
     private Sprite[] sprites = new Sprite[6];
     private int spriteIndex = 0;
+    private boolean isTurn;
 
     public Sprite getWorkerSprite() {
         return sprites[spriteIndex];
     }
 
-    public void rc() {
+    private void rc() {
         if (spriteIndex == 5) {
             spriteIndex = 0;
         } else {
@@ -22,7 +23,7 @@ public class SpriteWorker {
         }
     }
 
-    public void rcc() {
+    private void rcc() {
         if (spriteIndex == 0) {
             spriteIndex = 5;
         } else {
@@ -46,7 +47,7 @@ public class SpriteWorker {
 
     public SpriteWorker(Unit unit) {
         sprites[0] = new Sprite(unit);
+        isTurn = false;
 
-        this.sprites = sprites;
     }
 }
