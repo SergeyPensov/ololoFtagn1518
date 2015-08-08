@@ -36,7 +36,7 @@ public class APIServer {
         ServletHolder defaultServletHolder = new ServletHolder(new DefaultServlet());
         defaultServletHolder.setInitParameter("resourceBase", htmlLoc +"\\ui");
         apiHandler.addServlet(defaultServletHolder, "/*");
-        apiHandler.setWelcomeFiles(new String[]{"tester.html"});
+        apiHandler.setWelcomeFiles(new String[]{"index.html"});
 
 
         apiHandlers.addHandler(apiHandler);
