@@ -31,12 +31,12 @@ public class Board {
         return new Pivot(i,j);
     }
 
-    int readCell( int i, int j) {
+    public int readCell( int i, int j) {
         final int index = getIndex(i, j);
         return array[index];
     }
 
-    void setCell( int i, int j, int value) {
+    public void setCell( int i, int j, int value) {
         final int index = getIndex(i, j);
         array[index] = value;
     }
