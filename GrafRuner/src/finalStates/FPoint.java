@@ -11,4 +11,12 @@ public class FPoint {
         this.x = x;
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "FPoint{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

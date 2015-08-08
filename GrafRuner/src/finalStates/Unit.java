@@ -6,4 +6,11 @@ package finalStates;
 public class Unit {
     Pivot pivot;
     Pivot[] members;
+
+    @Override
+    public String toString() {
+        return "Unit{" +
+                "pivot=" + pivot +
+                '}';
+    }
 }

@@ -7,7 +7,7 @@ import com.google.gson.Gson;
  */
 public class Problem {
     int id;
-    Unit[] units;
+    public Unit[] units;
     int width;
     int height;
     Pivot[] filled;

@@ -1,5 +1,7 @@
 package finalStates;
 
+import java.io.BufferedOutputStream;
+
 /**
  * Created by kirill on 8/8/2015.
  */
@@ -16,6 +18,25 @@ public class Board {
         this.width = width;
         this.height = height;
         array = new int[width*height];
+    }
+
+    public Board(Unit unit) {
+        // min & max
+        Pivot maxC = new Pivot(unit.pivot);
+        for (Pivot member : unit.members) {
+            if( member.x > maxC.x ) maxC.x = member.x;
+            if( member.y > maxC.y ) maxC.y = member.y;
+        }
+
+        width = Math.max(1, maxC.x+1);
+        height = Math.max(1, maxC.y+1);
+        array = new int[width*height];
+
+        setCell(unit.pivot, 2);
+        for (Pivot member : unit.members) {
+            setCell(member,1);
+        }
+
     }
 
     public static FPoint getCoordsForIndexes(final Pivot index) {
@@ -39,6 +60,10 @@ public class Board {
     public void setCell( int i, int j, int value) {
         final int index = getIndex(i, j);
         array[index] = value;
+    }
+
+    public void setCell( final Pivot p, int value) {
+        setCell(p.x, p.y, value);
     }
 
     private int getIndex(int i, int j) {
