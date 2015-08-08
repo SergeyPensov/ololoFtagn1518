@@ -30,6 +30,8 @@ public class BoardVis {
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D gr = image.createGraphics();
+        gr.setBackground(Color.WHITE);
+        gr.fillRect(0,0,image.getWidth(),image.getHeight());
 
         for( int j=0; j<board.height; ++j) {
             for( int i=0; i<board.width; ++i) {
@@ -43,17 +45,17 @@ public class BoardVis {
     private void drawCell(Graphics2D gr, int i, int j, int state) {
         FPoint p = Board.getCoordsForIndexes(new Pivot(i,j));
 
-        Pivot center = new Pivot( (int)(p.x * SCALE), (int)(p.y * SCALE));
+        Pivot center = new Pivot( (int)((p.x+1) * SCALE), (int)((p.y+1) * SCALE));
         final float R = Board.R * SCALE;
 
         Polygon polygon = new Polygon();
         for( int v=0; v<6; ++v) {
-            final float a = (float) (2*Math.PI*v/6.0f);
+            final float a = (float) (2*Math.PI*(0.5f+v)/6.0f);
             int x = center.x + (int) (R * Math.cos(a));
             int y = center.y + (int) (R * Math.sin(a));
             polygon.addPoint(x,y);
         }
-        gr.setBackground(state == 0 ? Color.BLUE : Color.YELLOW);
+        gr.setColor(state == 0 ? Color.BLUE : Color.YELLOW);
         gr.fillPolygon(polygon);
         gr.setColor(Color.BLACK);
         gr.drawPolygon(polygon);
