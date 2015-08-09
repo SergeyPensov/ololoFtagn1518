@@ -125,8 +125,10 @@ public class Solver {
                 }
 
                 nextState = command.apply(state);
+                if( states.contains(nextState)) nextState = null;
             }
-            else {
+
+            if( nextState == null ) {
                 int it;
                 for (it = 10; it >= 0; it--) {
                     int commandIndex = (random.nextInt() & 0xFF) % 4;
