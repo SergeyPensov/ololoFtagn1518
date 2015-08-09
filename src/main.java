@@ -68,6 +68,7 @@ public class main {
                 BoardVis vis = new BoardVis();
                 BufferedImage image = vis.draw(board, null, null);
                 ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
+/*
 
                 // drawing units
                 int unitCounter = 0;
@@ -77,6 +78,7 @@ public class main {
                     ImageIO.write(image, "png", new File(String.format("%s_unit_%02d.png", inputFileName, unitCounter)));
                     ++unitCounter;
                 }
+*/
 
                 Solver solver = new Solver(problem, inputFileName);
                 final SolverResult[] results = solver.solveAll();

@@ -42,6 +42,8 @@ public class Solver {
             sb.append(sequence).append("\n");
         }
 
+        System.out.println("score="+board.score);
+
         final String solution = sb.toString();
         return new SolverResult(problem.id, seed, "", solution);
     }
