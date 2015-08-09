@@ -65,12 +65,25 @@ public class Solver {
 
         List<Command> commands = new ArrayList<>(100);
 
+/*
+        // searching for good lock states
+        for( int y=board.height-1; y>=0; y--) {
+            for( int x=0; x<board.width; ++x) {
+
+            }
+        }
+*/
+
         UnitState state = spawnState;
         int moveIndex = 1;
         while(live) {
 
             Command command = null;
             UnitState nextState = null;
+
+            // moving in good direction
+
+
             int it;
             for( it=10; it>=0; it--) {
                 int commandIndex = 3;//(random.nextInt() & 0xFF) % 4;
