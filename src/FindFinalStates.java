@@ -1,19 +1,26 @@
-import finalStates.HexMap;
-import finalStates.Pivot;
-import finalStates.SpriteWorker;
-import finalStates.Unit;
+import finalStates.*;
+
+import java.util.ArrayList;
 
 /**
  * @Author Sergey Pensov
  */
 public class FindFinalStates {
-    private HexMap map;
-    private Pivot pilot;
-    private SpriteWorker worker;
+    private Board board;
+    private Unit unit;
 
-    public FindFinalStates(Unit unit, HexMap map) {
-        this.map = map;
-        this.pilot = unit.pivot;
-        this.worker = new SpriteWorker(unit);
+    public FindFinalStates(Unit unit, Board board) {
+        this.board = board;
+        this.unit = unit;
     }
+
+    public UnitState[] getOptimalPositionInMap() {
+        ArrayList<UnitState> unitStates = new ArrayList<>();
+        for (int i = board.height; 0 < i; i--) {
+         /*   if (board.isValid(unit,new Uni))*/
+        }
+        return null;
+    }
+
+
 }

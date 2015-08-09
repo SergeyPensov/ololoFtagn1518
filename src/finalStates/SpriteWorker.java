@@ -47,4 +47,6 @@ public class SpriteWorker {
         isTurn = false;
 
     }
+
+
 }

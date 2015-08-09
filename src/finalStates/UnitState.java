@@ -4,13 +4,13 @@ package finalStates;
  * Created by kirill.sidorchuk on 8/9/2015.
  */
 public class UnitState {
-    public final Pivot start; // local coordinate system shift
+    public final Point start; // local coordinate system shift
     public final int angle; // 0..5
     public final int width;
     public final int height;
     public final int wh;
 
-    public UnitState(Pivot start, int angle, int width, int height) {
+    public UnitState(Point start, int angle, int width, int height) {
         this.start = start;
         this.angle = angle;
         this.width = width;

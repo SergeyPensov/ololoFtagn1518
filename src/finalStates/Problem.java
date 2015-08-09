@@ -1,7 +1,6 @@
 package finalStates;
 
 import com.google.gson.Gson;
-import http.APIServer;
 
 import java.util.Arrays;
 
@@ -14,7 +13,7 @@ public class Problem {
     public transient Board[] unitBoards;
     public int width;
     public int height;
-    public Pivot[] filled;
+    public Point[] filled;
     public int sourceLength;
     public int[] sourceSeeds;
 
@@ -58,7 +57,7 @@ public class Problem {
     public Board getBoard() {
         Board board = new Board(width,height);
 
-        for (Pivot p : filled) {
+        for (Point p : filled) {
             board.setCell(p.x,p.y,1);
         }
 

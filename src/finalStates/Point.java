@@ -3,16 +3,16 @@ package finalStates;
 /**
  * @Author Sergey Pensov
  */
-public class Pivot {
+public class Point {
     public int x;
     public int y;
 
-    public Pivot() {
+    public Point() {
         x = 0;
         y = 0;
     }
 
-    public Pivot(Pivot pivot) {
+    public Point(Point pivot) {
         this.x = pivot.x;
         this.y = pivot.y;
     }
@@ -33,7 +33,7 @@ public class Pivot {
         this.y = y;
     }
 
-    public Pivot(int x, int y) {
+    public Point(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -43,7 +43,7 @@ public class Pivot {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Pivot pivot = (Pivot) o;
+        Point pivot = (Point) o;
 
         if (x != pivot.x) return false;
         return y == pivot.y;

@@ -5,6 +5,16 @@ package finalStates;
  */
 public class Sprite {
     private int[][] spriteArr;
+    private int width;
+    private int height;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 
     public int[][] getSpriteArr() {
         return spriteArr;
@@ -15,7 +25,7 @@ public class Sprite {
         int minX = -1;
         int maxY = -1;
         int minY = -1;
-        for (Pivot member : unit.members) {
+        for (Point member : unit.members) {
             if (member.getX() > maxX)
                 maxX = member.getX();
             else if (member.getX() < minX)
@@ -36,9 +46,10 @@ public class Sprite {
             maxY = unit.pivot.getY();
         else if (unit.pivot.getY() < minY)
             minY = unit.pivot.getY();
-
-        spriteArr = new int[maxX - minX][maxY - minY];
-        for (Pivot member : unit.members) {
+        height = maxY - minY + 1;
+        width = maxX - minX + 1;
+        spriteArr = new int[width][height];
+        for (Point member : unit.members) {
             spriteArr[member.getX()][member.getY()] = Constants.MEMBER_NUMBER;
         }
         if (spriteArr[unit.pivot.getX()][unit.pivot.getY()] == Constants.HOLE_NUMBER) {
@@ -46,6 +57,7 @@ public class Sprite {
         } else if (spriteArr[unit.pivot.getX()][unit.pivot.getY()] == Constants.MEMBER_NUMBER) {
             spriteArr[unit.pivot.getX()][unit.pivot.getY()] = Constants.PIVOT_IN_MEMBER_NUMBER;
         }
+
         throw new IllegalArgumentException("indexes out of bounds");
     }
 }
