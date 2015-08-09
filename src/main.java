@@ -74,10 +74,10 @@ public class main {
                     ImageIO.write(image, "png", new File(String.format("%s_unit_%02d.png", inputFileName, unitCounter)));
                     ++unitCounter;
                 }
+
+*/
                 FindFinalStates findFinalStates = new FindFinalStates(problem.units[0], board);
                 findFinalStates.getOptimalPositionInMap();
-*/
-
                 Solver solver = new Solver(problem, inputFileName);
                 final SolverResult[] results = solver.solveAll();
 
