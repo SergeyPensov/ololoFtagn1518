@@ -1,6 +1,7 @@
 import finalStates.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @Author Sergey Pensov
@@ -15,9 +16,23 @@ public class FindFinalStates {
     }
 
     public UnitState[] getOptimalPositionInMap() {
-        ArrayList<UnitState> unitStates = new ArrayList<>();
-        for (int i = board.height; 0 < i; i--) {
-         /*   if (board.isValid(unit,new Uni))*/
+        HashMap<UnitState, Integer> unitStates = new HashMap<>();
+        for (int j = 0; j < board.height; j++) {
+            for (int i = 0; i < board.width; i++) {
+                Point testPoint = new Point(i, board.height - j);
+                UnitState testState = new UnitState(testPoint, 0, 0, 0);
+                if (board.isValid(unit, testState)) {
+                    UnitState stableState = new UnitState(testState);
+                    int lockCounter = 0;
+                    for (int k = 0; k < Command.commands.length; k++) {
+                        if (board.isValid(unit, testState.applyCommand(Command.getCommand(k)))) {
+                            lockCounter++;
+                        }
+                        testState = new UnitState(stableState);
+                    }
+                    unitStates.add(testState);
+                }
+            }
         }
         return null;
     }

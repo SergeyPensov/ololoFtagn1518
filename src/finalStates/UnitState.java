@@ -15,7 +15,15 @@ public class UnitState {
         this.angle = angle;
         this.width = width;
         this.height = height;
-        this.wh = width*height;
+        this.wh = width * height;
+    }
+
+    public UnitState(UnitState state) {
+        this.start = state.start;
+        this.angle = state.angle;
+        this.width = state.width;
+        this.height = state.height;
+        this.wh = width * height;
     }
 
     public UnitState applyCommand(Command c) {
@@ -42,7 +50,7 @@ public class UnitState {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == null || !(obj instanceof UnitState)) return false;
+        if (obj == null || !(obj instanceof UnitState)) return false;
 
         UnitState us = (UnitState) obj;
         return getIndex() == us.getIndex();
