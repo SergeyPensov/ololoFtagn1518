@@ -1,6 +1,7 @@
 package vis;
 
 import finalStates.*;
+import finalStates.Point;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,8 +16,8 @@ public class BoardVis {
     public static BufferedImage draw(Board board, Unit unit, UnitState state) {
 
         // detecting image size
-        FPoint f0 = Board.getCoordsForIndexes(new Pivot(0, 0));
-        FPoint f1 = Board.getCoordsForIndexes(new Pivot(board.width, board.height));
+        FPoint f0 = Board.getCoordsForIndexes(new Point(0, 0));
+        FPoint f1 = Board.getCoordsForIndexes(new Point(board.width, board.height));
 
         int width = (int) ((f1.x - f0.x + 1)*SCALE);
         int height = (int) ((f1.y - f0.y + 1)*SCALE);
@@ -36,7 +37,7 @@ public class BoardVis {
         if( unit != null) {
             final Unit transformed = board.transform(unit, state);
 
-            for (Pivot member : transformed.members) {
+            for (Point member : transformed.members) {
                 drawCell(gr, member.x, member.y, 1, true);
             }
             drawCell(gr, transformed.pivot.x, transformed.pivot.y, 2, true);
@@ -46,9 +47,9 @@ public class BoardVis {
     }
 
     private static void drawCell(Graphics2D gr, int i, int j, int state, boolean isUnit) {
-        FPoint p = Board.getCoordsForIndexes(new Pivot(i,j));
+        FPoint p = Board.getCoordsForIndexes(new Point(i,j));
 
-        Pivot center = new Pivot( (int)((p.x+1) * SCALE), (int)((p.y+1) * SCALE));
+        Point center = new Point( (int)((p.x+1) * SCALE), (int)((p.y+1) * SCALE));
         final float R = Board.R * SCALE;
 
         Polygon polygon = new Polygon();
