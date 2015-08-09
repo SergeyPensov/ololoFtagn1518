@@ -24,7 +24,7 @@ public class main {
     }
 
     private static void saveFile(final String path, final String text) throws IOException {
-        try( FileOutputStream fos = new FileOutputStream(new File(path))) {
+        try (FileOutputStream fos = new FileOutputStream(new File(path))) {
             byte[] data = text.getBytes(Charset.defaultCharset());
             fos.write(data);
             fos.close();
@@ -39,22 +39,18 @@ public class main {
         Integer memoryLimit = null;
         Integer cpuCoresCount = null;
 
-        for( int i=0; i<args.length; i+=2) {
+        for (int i = 0; i < args.length; i += 2) {
             final String opt = args[i];
-            if( opt.equals("-f")) {
-                inputFileNames.add(args[i+1]);
-            }
-            else if( opt.equals("-t")) {
-                timeLimit = Integer.parseInt(args[i+1]);
-            }
-            else if( opt.equals("-m")) {
-                memoryLimit = Integer.parseInt(args[i+1]);
-            }
-            else if( opt.equals("-p")) {
-                phrases.add(args[i+1]);
-            }
-            else if( opt.equals("-c")) {
-                cpuCoresCount = Integer.parseInt(args[i+1]);
+            if (opt.equals("-f")) {
+                inputFileNames.add(args[i + 1]);
+            } else if (opt.equals("-t")) {
+                timeLimit = Integer.parseInt(args[i + 1]);
+            } else if (opt.equals("-m")) {
+                memoryLimit = Integer.parseInt(args[i + 1]);
+            } else if (opt.equals("-p")) {
+                phrases.add(args[i + 1]);
+            } else if (opt.equals("-c")) {
+                cpuCoresCount = Integer.parseInt(args[i + 1]);
             }
         }
 
@@ -77,7 +73,8 @@ public class main {
                     ImageIO.write(image, "png", new File(String.format("%s_unit_%02d.png", inputFileName, unitCounter)));
                     ++unitCounter;
                 }
-
+                FindFinalStates findFinalStates = new FindFinalStates(problem.units[0], board);
+                findFinalStates.getOptimalPositionInMap();
                 Solver solver = new Solver(problem, inputFileName);
                 final SolverResult[] results = solver.solveAll();
 
@@ -106,12 +103,11 @@ public class main {
 
     private static String escape(final String resultJSON) {
         StringBuilder sb = new StringBuilder(resultJSON.length());
-        for( int i=0; i<resultJSON.length(); ++i) {
+        for (int i = 0; i < resultJSON.length(); ++i) {
             char c = resultJSON.charAt(i);
-            if( c == '\"') {
+            if (c == '\"') {
                 sb.append("\\\"");
-            }
-            else {
+            } else {
                 sb.append(c);
             }
         }

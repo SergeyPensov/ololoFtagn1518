@@ -30,10 +30,11 @@ public class FindFinalStates {
                         }
                         testState = new UnitState(stableState);
                     }
-                    unitStates.add(testState);
+                    unitStates.put(testState, lockCounter);
                 }
             }
         }
+        System.out.println(unitStates.toString());
         return null;
     }
 
