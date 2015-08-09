@@ -32,11 +32,11 @@ public class Board {
         height = Math.max(1, maxC.y+1);
         array = new int[width*height];
 
-        setCell(unit.pivot, 2);
+        setCell(unit.pivot, CellState.PIVOT.getState());
         for (Pivot member : unit.members) {
-            setCell(member,1);
+            final int state = member.equals(unit.pivot) ? CellState.FILLED_PIVOT.getState() : CellState.FILLED.getState();
+            setCell(member,state);
         }
-
     }
 
     public static FPoint getCoordsForIndexes(final Pivot index) {
@@ -71,4 +71,8 @@ public class Board {
         return i + j*width;
     }
 
+    public boolean isValid(Unit unit, Pivot pivot, int angle) {
+        // todo
+        return false;
+    }
 }

@@ -39,6 +39,25 @@ public class Pivot {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pivot pivot = (Pivot) o;
+
+        if (x != pivot.x) return false;
+        return y == pivot.y;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = y;
+        result = 3431 * result + x;
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Pivot{" +
                 "x=" + x +

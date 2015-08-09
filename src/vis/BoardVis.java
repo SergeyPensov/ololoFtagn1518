@@ -1,10 +1,7 @@
 package vis;
 
 import com.sun.org.apache.xml.internal.utils.res.XResources_zh_TW;
-import finalStates.Board;
-import finalStates.FPoint;
-import finalStates.Pivot;
-import finalStates.Unit;
+import finalStates.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -59,5 +56,12 @@ public class BoardVis {
         gr.fillPolygon(polygon);
         gr.setColor(Color.BLACK);
         gr.drawPolygon(polygon);
+
+        final int d = SCALE/3;
+        if( 0 != (state & 2) ) {
+            // pivot
+            gr.setColor(Color.BLACK);
+            gr.fillOval(center.x - d/2, center.y - d/2, d,d);
+        }
     }
 }
