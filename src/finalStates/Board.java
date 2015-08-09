@@ -1,6 +1,6 @@
 package finalStates;
 
-import java.io.BufferedOutputStream;
+import java.util.Arrays;
 
 /**
  * Created by kirill on 8/8/2015.
@@ -18,6 +18,12 @@ public class Board {
         this.width = width;
         this.height = height;
         array = new int[width*height];
+    }
+
+    public Board(Board b) {
+        width = b.width;
+        height = b.height;
+        array = Arrays.copyOf(b.array,b.array.length);
     }
 
     public Board(Unit unit) {
@@ -111,5 +117,12 @@ public class Board {
             }
         }
         return true;
+    }
+
+    public UnitState getSpawnState(Unit unit, Board unitBoard) {
+        int i = (width - unitBoard.width)/2;
+        int j = 0;
+
+        return new UnitState(new Pivot(i,j), 0, width, height );
     }
 }

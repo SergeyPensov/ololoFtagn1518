@@ -1,3 +1,5 @@
+package finalStates;
+
 /**
  * Created by kirill.sidorchuk on 8/7/2015.
  */

@@ -9,17 +9,26 @@ import java.util.Arrays;
  * Created by kirill.sidorchuk on 8/7/2015.
  */
 public class Problem {
-    int id;
+    public int id;
     public Unit[] units;
-    int width;
-    int height;
-    Pivot[] filled;
-    int sourceLength;
-    int[] sourceSeeds;
+    public transient Board[] unitBoards;
+    public int width;
+    public int height;
+    public Pivot[] filled;
+    public int sourceLength;
+    public int[] sourceSeeds;
 
     public static Problem read(String json) {
         Gson gson = new Gson();
         Problem result = gson.fromJson(json, Problem.class);
+
+        // initializing problem
+        result.unitBoards = new Board[result.units.length];
+        int i=0;
+        for (Unit unit : result.units) {
+            result.unitBoards[i] = new Board(unit);
+            i++;
+        }
         return result;
     }
 
@@ -54,5 +63,15 @@ public class Problem {
         }
 
         return board;
+    }
+
+    public int[] getUnitsForTheGame(int seed) {
+        final RandomGenerator randomGenerator = new RandomGenerator(seed);
+        int[] result = new int[sourceLength];
+        for( int i=0; i<sourceLength; ++i) {
+            int index = randomGenerator.generate() % units.length;
+            result[i] = index;
+        }
+        return result;
     }
 }

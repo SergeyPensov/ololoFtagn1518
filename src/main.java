@@ -1,13 +1,11 @@
-import finalStates.Board;
-import finalStates.Problem;
-import finalStates.Unit;
+import com.google.gson.Gson;
+import finalStates.*;
 import vis.BoardVis;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +21,14 @@ public class main {
         fis.read(data);
         fis.close();
         return new String(data, "UTF-8");
+    }
+
+    private static void saveFile(final String path, final String text) throws IOException {
+        try( FileOutputStream fos = new FileOutputStream(new File(path))) {
+            byte[] data = text.getBytes(Charset.defaultCharset());
+            fos.write(data);
+            fos.close();
+        }
     }
 
     public static void main(String[] args) {
@@ -71,6 +77,33 @@ public class main {
                     ImageIO.write(image, "png", new File(String.format("%s_unit_%02d.png", inputFileName, unitCounter)));
                     ++unitCounter;
                 }
+
+                Solver solver = new Solver(problem);
+                final SolverResult[] results = solver.solveAll(new int[]{problem.sourceSeeds[0]});
+
+                Gson gson = new Gson();
+                results[0].solution = "iiiiiiiimmiiiiiimimmiiiimimimmimimimimmimimimeemimeeeemimim\n" +
+                        "imimiiiiiimmeemimimimimiimimimmeemimimimmeeeemimimimmiiiiii\n" +
+                        "pmiimimimeeemmimimmemimimimiiiiiimeeemimimimimeeemimimimmii\n" +
+                        "iimemimimmiiiipimeeemimimmiiiippmeeeeemimimimiiiimmimimeemi\n" +
+                        "mimeeeemimimiiiipmeeemmimmiimimmmimimeemimimimmeeemimiiiiip\n" +
+                        "miiiimmeeemimimiiiipmmiipmmimmiippimemimeeeemimmiipppmeeeee\n" +
+                        "mimimmiimipmeeeemimimiimmeeeeemimmeemimmeeeemimiiippmiippmi\n" +
+                        "iimmiimimmmmmeeeemimmiippimmimimeemimimimmeemimimimmeemimim\n" +
+                        "imiimimimeeemmimimmmiiiiipimeemimimimmiiiimimmiiiiiiiimiimi\n" +
+                        "mimimeeemmimimimmiiiiiimimmemimimimimmimimimeemimiiiiiiiimi\n" +
+                        "iiimimimiimimimmimmimimimimmeeeemimimimimmmimimimimeemimimi\n" +
+                        "mimmmemimimmiiiiiiimiimimimmiiiiiimeeeeemimimimimmimimimmmm\n" +
+                        "emimimmeeeemimimimmiimimimmiiiiiipmeeeeemimimimimmiiiiimmem\n" +
+                        "imimimimmmmimimmeeeemimimimimeeemimimimmiimimimeeemmimimmii\n" +
+                        "iiiiimimiiiiiimimmiiiiiiiimmimimimimiiiimimimeemimimimimmee\n" +
+                        "emimimimimiiiiiiimiiiimimmemimimimmeemimimimeeemmimimmiiiii\n" +
+                        "immiiiipmmiiimmmimimeemimimeeemmimmiiiippmiiiimiiippimiimim\n" +
+                        "eemimimeeeemimimiiiipmeemimimiimiimimmimeeemimimmippipmmiim\n" +
+                        "emimmipimeeeemimmeemimiippimeeeeemimimmmimmmeeeemimimiiipim\n" +
+                        "miipmemimmeeeemimimiipipimmipppimeeemimmpppmmpmeeeeemimmemm ";
+                final String resultJSON = gson.toJson(results);
+                saveFile( inputFileName + "_result.json", resultJSON);
 
             } catch (IOException e) {
                 e.printStackTrace();
