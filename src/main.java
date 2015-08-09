@@ -79,7 +79,7 @@ public class main {
                 }
 
                 Solver solver = new Solver(problem, inputFileName);
-                final SolverResult[] results = solver.solveAll(new int[]{problem.sourceSeeds[1]});
+                final SolverResult[] results = solver.solveAll();
 
                 Gson gson = new Gson();
                 final String resultJSON = gson.toJson(results);

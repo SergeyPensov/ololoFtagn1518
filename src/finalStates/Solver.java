@@ -23,6 +23,8 @@ public class Solver {
 
     public SolverResult solve(int seed) {
 
+        System.out.println("Solving for seed " + seed);
+
         final int[] unitsForTheGame = problem.getUnitsForTheGame(seed);
 
         StringBuilder sb = new StringBuilder(1024);
@@ -34,7 +36,7 @@ public class Solver {
             final Unit unit = problem.units[unitIndex];
             final Board unitBoard = problem.unitBoards[unitIndex];
             final int[] nextUnits = Arrays.copyOfRange(unitsForTheGame, f + 1, unitsForTheGame.length);
-            final String sequence = play(board, unit, unitBoard, nextUnits, f);
+            final String sequence = play(board, unit, unitBoard, nextUnits, f, seed);
             if( sequence == null ) break; // GAME OVER
             sb.append(sequence).append("\n");
         }
@@ -43,14 +45,14 @@ public class Solver {
         return new SolverResult(problem.id, seed, "", solution);
     }
 
-    private String play(Board board, Unit unit, Board unitBoard, int[] nextUnits, int currentUnitIndex) {
+    private String play(Board board, Unit unit, Board unitBoard, int[] nextUnits, int currentUnitIndex, int seed) {
 
         // creating graph 
         Graph graph = new Graph(board.width, board.height);
 
         final UnitState spawnState = board.getSpawnState(unit, unitBoard);
 
-        drawFrame(board, unit, currentUnitIndex, spawnState, 0);
+        drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed);
 
         // playing random
         Set<UnitState> states = new HashSet<>();
@@ -90,21 +92,21 @@ public class Solver {
             if( live ) {
                 state = nextState; // updating state if unit is not locked
 
-                drawFrame(board, unit, currentUnitIndex, state, moveIndex);
+                drawFrame(board, unit, currentUnitIndex, state, moveIndex, seed);
                 moveIndex++;
             }
         }
 
         // updating the board with locked unit
         board.updateBoard(unit, state);
-        drawFrame(board, null, currentUnitIndex, state, moveIndex+1);
+        drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed);
 
         return Command.encode(commands);
     }
 
-    private void drawFrame(Board board, Unit unit, int currentUnitIndex, UnitState state, int moveIndex) {
+    private void drawFrame(Board board, Unit unit, int currentUnitIndex, UnitState state, int moveIndex, int seed) {
         final BufferedImage image = BoardVis.draw(board, unit, state);
-        final String fileNmae = String.format("%s_play_u%03d_i%03d.png", path, currentUnitIndex, moveIndex);
+        final String fileNmae = String.format("%s_seed%d_play_u%03d_i%03d.png", path, seed, currentUnitIndex, moveIndex);
         try {
             ImageIO.write(image, "png", new File(fileNmae));
         } catch (IOException e) {
