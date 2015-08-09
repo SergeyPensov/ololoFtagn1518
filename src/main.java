@@ -79,7 +79,7 @@ public class main {
                 }
 
                 Solver solver = new Solver(problem, inputFileName);
-                final SolverResult[] results = solver.solveAll(new int[]{problem.sourceSeeds[1]});
+                final SolverResult[] results = solver.solveAll();
 
                 Gson gson = new Gson();
                 final String resultJSON = gson.toJson(results);
@@ -100,7 +100,7 @@ public class main {
         final String TEAM_ID = "195";
         final String OUTPUT = escape(resultJSON);
 
-        return String.format("c:/soft/curl -k --user %s -X POST -H \"Content-Type: application/json\" -d %s https://davar.icfpcontest.org/teams/%s/solutions",
+        return String.format("c:/soft/curl -k --user %s -X POST -H \"Content-Type: application/json\" -d %s https://davar.icfpcontest.org/teams/%s/solutions\n@echo\n@pause\n",
                 API_TOKEN, OUTPUT, TEAM_ID);
     }
 
