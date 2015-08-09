@@ -47,6 +47,17 @@ public class Solver {
     }
 
     private Command findDirection(Board board, Unit unit, UnitState startState, UnitState endState, int depth, Set<UnitState> visitedStates) {
+
+        if( startState.equals(endState)) {
+            // locking
+            for (Command command : Command.commands) {
+                if( !board.isValid(unit, command.apply(startState)) ) {
+                    return command;
+                }
+            }
+
+        }
+
         for (Command com : Command.commands) {
             if( com.apply(startState).equals(endState) ) {
                 return com;

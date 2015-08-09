@@ -174,7 +174,7 @@ public class Board {
         }
 
         score += points + bonus;
-        
+
         oldLinesKilled = linesKilled;
     }
 
