@@ -71,7 +71,7 @@ public class Solver {
             UnitState nextState = null;
             int it;
             for( it=10; it>=0; it--) {
-                int commandIndex = (random.nextInt() & 0xFF) % 4;
+                int commandIndex = 3;//(random.nextInt() & 0xFF) % 4;
                 command = Command.getCommand(commandIndex);
                 nextState = command.apply(state);
                 if( !states.contains(nextState)) break;
@@ -97,6 +97,7 @@ public class Solver {
 
         // updating the board with locked unit
         board.updateBoard(unit, state);
+        drawFrame(board, null, currentUnitIndex, state, moveIndex+1);
 
         return Command.encode(commands);
     }

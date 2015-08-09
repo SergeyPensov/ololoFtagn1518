@@ -1,6 +1,5 @@
 package vis;
 
-import com.sun.org.apache.xml.internal.utils.res.XResources_zh_TW;
 import finalStates.*;
 
 import java.awt.*;
@@ -29,7 +28,7 @@ public class BoardVis {
 
         for( int j=0; j<board.height; ++j) {
             for( int i=0; i<board.width; ++i) {
-                drawCell(gr,i,j,board.readCell(i,j));
+                drawCell(gr,i,j,board.readCell(i,j), false);
             }
         }
 
@@ -38,15 +37,15 @@ public class BoardVis {
             final Unit transformed = board.transform(unit, state);
 
             for (Pivot member : transformed.members) {
-                drawCell(gr, member.x, member.y, 1);
+                drawCell(gr, member.x, member.y, 1, true);
             }
-            drawCell(gr, transformed.pivot.x, transformed.pivot.y, 2);
+            drawCell(gr, transformed.pivot.x, transformed.pivot.y, 2, true);
         }
 
         return image;
     }
 
-    private static void drawCell(Graphics2D gr, int i, int j, int state) {
+    private static void drawCell(Graphics2D gr, int i, int j, int state, boolean isUnit) {
         FPoint p = Board.getCoordsForIndexes(new Pivot(i,j));
 
         Pivot center = new Pivot( (int)((p.x+1) * SCALE), (int)((p.y+1) * SCALE));
@@ -61,7 +60,11 @@ public class BoardVis {
         }
 
         if( state < 2) {
-            gr.setColor(state == 0 ? Color.BLUE : Color.YELLOW);
+            if( isUnit )
+                gr.setColor(state == 0 ? Color.BLUE : Color.green);
+            else
+                gr.setColor(state == 0 ? Color.BLUE : Color.YELLOW);
+
             gr.fillPolygon(polygon);
             gr.setColor(Color.BLACK);
             gr.drawPolygon(polygon);

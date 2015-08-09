@@ -16,7 +16,8 @@ public class SW extends Command {
 
     @Override
     public UnitState apply(UnitState s) {
-        return new UnitState(new Pivot(s.start.x-1, s.start.y+1), s.angle, s.width, s.height );
+        final int newX = 0 == (s.start.y & 1) ? s.start.x - 1 : s.start.x;
+        return new UnitState(new Pivot(newX, s.start.y+1), s.angle, s.width, s.height );
     }
 
     @Override
