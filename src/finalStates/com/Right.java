@@ -18,4 +18,9 @@ public class Right extends Command {
     public UnitState apply(UnitState s) {
         return new UnitState(new Pivot(s.start.x+1, s.start.y), s.angle, s.width, s.height );
     }
+
+    @Override
+    public String toString() {
+        return "Right{}";
+    }
 }

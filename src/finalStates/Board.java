@@ -106,7 +106,7 @@ public class Board {
             int j = unit.pivot.y + state.start.y;
             result.pivot = new Pivot(i,j);
 
-            int index =1;
+            int index = 0;
             for (Pivot member : unit.members) {
                 i = (member.y & 1) == 0 ?  member.x + state.start.x : member.x + state.start.x + 1;
                 j = member.y + state.start.y;
@@ -120,7 +120,7 @@ public class Board {
 
     public boolean isValid(Unit unit, UnitState state) {
         final Unit transformed = transform(unit, state);
-        for (Pivot member : unit.members) {
+        for (Pivot member : transformed.members) {
             final int i = member.x;
             final int j = member.y;
             if( i < 0 || i >= width || j >= height || readCell(i,j) != 0 ) return false;
@@ -130,7 +130,7 @@ public class Board {
 
     public void updateBoard(Unit unit, UnitState state) {
         final Unit transformed = transform(unit, state);
-        for (Pivot member : unit.members) {
+        for (Pivot member : transformed.members) {
             final int i = member.x;
             final int j = member.y;
             setCell(i, j, CellState.FILLED.getState());

@@ -30,6 +30,7 @@ public class UnitState {
                 '}';
     }
 
+    // todo take symmetry into account when calculating index
     public int getIndex() {
         return start.x + start.y * width + angle * wh;
     }
@@ -37,5 +38,13 @@ public class UnitState {
     @Override
     public int hashCode() {
         return getIndex();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if( obj == null || !(obj instanceof UnitState)) return false;
+
+        UnitState us = (UnitState) obj;
+        return getIndex() == us.getIndex();
     }
 }

@@ -82,26 +82,6 @@ public class main {
                 final SolverResult[] results = solver.solveAll(new int[]{problem.sourceSeeds[0]});
 
                 Gson gson = new Gson();
-                results[0].solution = "iiiiiiiimmiiiiiimimmiiiimimimmimimimimmimimimeemimeeeemimim\n" +
-                        "imimiiiiiimmeemimimimimiimimimmeemimimimmeeeemimimimmiiiiii\n" +
-                        "pmiimimimeeemmimimmemimimimiiiiiimeeemimimimimeeemimimimmii\n" +
-                        "iimemimimmiiiipimeeemimimmiiiippmeeeeemimimimiiiimmimimeemi\n" +
-                        "mimeeeemimimiiiipmeeemmimmiimimmmimimeemimimimmeeemimiiiiip\n" +
-                        "miiiimmeeemimimiiiipmmiipmmimmiippimemimeeeemimmiipppmeeeee\n" +
-                        "mimimmiimipmeeeemimimiimmeeeeemimmeemimmeeeemimiiippmiippmi\n" +
-                        "iimmiimimmmmmeeeemimmiippimmimimeemimimimmeemimimimmeemimim\n" +
-                        "imiimimimeeemmimimmmiiiiipimeemimimimmiiiimimmiiiiiiiimiimi\n" +
-                        "mimimeeemmimimimmiiiiiimimmemimimimimmimimimeemimiiiiiiiimi\n" +
-                        "iiimimimiimimimmimmimimimimmeeeemimimimimmmimimimimeemimimi\n" +
-                        "mimmmemimimmiiiiiiimiimimimmiiiiiimeeeeemimimimimmimimimmmm\n" +
-                        "emimimmeeeemimimimmiimimimmiiiiiipmeeeeemimimimimmiiiiimmem\n" +
-                        "imimimimmmmimimmeeeemimimimimeeemimimimmiimimimeeemmimimmii\n" +
-                        "iiiiimimiiiiiimimmiiiiiiiimmimimimimiiiimimimeemimimimimmee\n" +
-                        "emimimimimiiiiiiimiiiimimmemimimimmeemimimimeeemmimimmiiiii\n" +
-                        "immiiiipmmiiimmmimimeemimimeeemmimmiiiippmiiiimiiippimiimim\n" +
-                        "eemimimeeeemimimiiiipmeemimimiimiimimmimeeemimimmippipmmiim\n" +
-                        "emimmipimeeeemimmeemimiippimeeeeemimimmmimmmeeeemimimiiipim\n" +
-                        "miipmemimmeeeemimimiipipimmipppimeeemimmpppmmpmeeeeemimmemm ";
                 final String resultJSON = gson.toJson(results);
                 saveFile( inputFileName + "_result.json", resultJSON);
 

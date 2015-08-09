@@ -18,4 +18,9 @@ public class SW extends Command {
     public UnitState apply(UnitState s) {
         return new UnitState(new Pivot(s.start.x-1, s.start.y+1), s.angle, s.width, s.height );
     }
+
+    @Override
+    public String toString() {
+        return "SW{}";
+    }
 }
