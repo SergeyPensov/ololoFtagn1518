@@ -10,9 +10,9 @@ public class Board {
     public static final float R = 1.0f/(float)Math.sqrt(3);
     public static final float DY = R * 1.5f;
 
-    public int width;
-    public int height;
-    private int[] array;
+    public final int width;
+    public final int height;
+    private final int[] array;
 
     public Board(int width, int height) {
         this.width = width;
@@ -28,14 +28,15 @@ public class Board {
 
     public Board(Unit unit) {
         // min & max
-        Point maxC = new Point(unit.pivot);
+        int maxCx = unit.pivot.x;
+        int maxCy = unit.pivot.y;
         for (Point member : unit.members) {
-            if( member.x > maxC.x ) maxC.x = member.x;
-            if( member.y > maxC.y ) maxC.y = member.y;
+            if( member.x > maxCx ) maxCx = member.x;
+            if( member.y > maxCy ) maxCy = member.y;
         }
 
-        width = Math.max(1, maxC.x+1);
-        height = Math.max(1, maxC.y+1);
+        width = Math.max(1, maxCx+1);
+        height = Math.max(1, maxCy+1);
         array = new int[width*height];
 
         setCell(unit.pivot, CellState.PIVOT.getState());

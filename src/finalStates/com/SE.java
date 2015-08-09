@@ -1,7 +1,7 @@
 package finalStates.com;
 
 import finalStates.Command;
-import finalStates.Pivot;
+import finalStates.Point;
 import finalStates.UnitState;
 
 /**
@@ -17,7 +17,7 @@ public class SE extends Command {
     @Override
     public UnitState apply(UnitState s) {
         final int newX = 0 == (s.start.y & 1) ? s.start.x : s.start.x + 1;
-        return new UnitState(new Pivot(newX, s.start.y+1), s.angle, s.width, s.height );
+        return new UnitState(new Point(newX, s.start.y+1), s.angle, s.width, s.height );
     }
 
     @Override

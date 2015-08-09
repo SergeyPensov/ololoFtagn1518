@@ -14,7 +14,12 @@ public abstract class Command {
     public abstract String letters();
     public abstract UnitState apply(UnitState s);
 
-    public static Command[] commands = {new Left(), new Right(), new SW(), new SE()  };
+    public static final Command C_LEFT = new Left();
+    public static final Command C_RIGHT = new Right();
+    public static final Command C_SW = new SW();
+    public static final Command C_SE = new SE();
+
+    public static Command[] commands = {C_LEFT, C_RIGHT, C_SW, C_SE };
 
     public static Command getCommand(int index) {
         return commands[index];
