@@ -13,6 +13,8 @@ public class Board {
     public final int width;
     public final int height;
     private final int[] array;
+    public int score=0;
+    private int oldLinesKilled=0;
 
     public Board(int width, int height) {
         this.width = width;
@@ -24,6 +26,8 @@ public class Board {
         width = b.width;
         height = b.height;
         array = Arrays.copyOf(b.array,b.array.length);
+        score = b.score;
+        oldLinesKilled = b.oldLinesKilled;
     }
 
     public Board(Unit unit) {
@@ -136,6 +140,42 @@ public class Board {
             final int j = member.y;
             setCell(i, j, CellState.FILLED.getState());
         }
+
+        int points = unit.members.length;
+
+        // searching for completely filled lines
+        int linesKilled = 0;
+        for( int y=height-1; y>=0; y--) {
+            boolean filled = true;
+            for( int x=0; x<height; ++x) {
+                if( readCell(x,y) == 0) {
+                    filled = false;
+                    break;
+                }
+            }
+
+            if( filled) {
+                linesKilled++;
+                // shifting all cells down
+                for( int y2=y-1; y2>=0; y2--) {
+                    for( int x=0; x<width; ++x) {
+                        setCell(x,y2+1, readCell(x, y2));
+                    }
+                }
+                y++;
+            }
+        }
+
+        points += 100 *(1 + linesKilled) * linesKilled / 2;
+
+        int bonus = 0;
+        if( oldLinesKilled != 0 ) {
+            bonus += ((oldLinesKilled-1) * points / 10);
+        }
+
+        score += points + bonus;
+
+        oldLinesKilled = linesKilled;
     }
 
     public UnitState getSpawnState(Unit unit, Board unitBoard) {

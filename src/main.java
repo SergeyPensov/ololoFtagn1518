@@ -24,7 +24,7 @@ public class main {
     }
 
     private static void saveFile(final String path, final String text) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(new File(path))) {
+        try( FileOutputStream fos = new FileOutputStream(new File(path))) {
             byte[] data = text.getBytes(Charset.defaultCharset());
             fos.write(data);
             fos.close();
@@ -64,6 +64,7 @@ public class main {
                 BoardVis vis = new BoardVis();
                 BufferedImage image = vis.draw(board, null, null);
                 ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
+/*
 
                 // drawing units
                 int unitCounter = 0;
@@ -75,6 +76,8 @@ public class main {
                 }
                 FindFinalStates findFinalStates = new FindFinalStates(problem.units[0], board);
                 findFinalStates.getOptimalPositionInMap();
+*/
+
                 Solver solver = new Solver(problem, inputFileName);
                 final SolverResult[] results = solver.solveAll();
 

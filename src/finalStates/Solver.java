@@ -42,11 +42,24 @@ public class Solver {
             sb.append(sequence).append("\n");
         }
 
+        System.out.println("score="+board.score);
+
         final String solution = sb.toString();
         return new SolverResult(problem.id, seed, "", solution);
     }
 
     private Command findDirection(Board board, Unit unit, UnitState startState, UnitState endState, int depth, Set<UnitState> visitedStates) {
+
+        if( startState.equals(endState)) {
+            // locking
+            for (Command command : Command.commands) {
+                if( !board.isValid(unit, command.apply(startState)) ) {
+                    return command;
+                }
+            }
+
+        }
+
         for (Command com : Command.commands) {
             if( com.apply(startState).equals(endState) ) {
                 return com;
@@ -125,8 +138,10 @@ public class Solver {
                 }
 
                 nextState = command.apply(state);
+                if( states.contains(nextState)) nextState = null;
             }
-            else {
+
+            if( nextState == null ) {
                 int it;
                 for (it = 10; it >= 0; it--) {
                     int commandIndex = (random.nextInt() & 0xFF) % 4;
