@@ -54,7 +54,7 @@ public class Board {
 
     public static Pivot getIndexForCoordinates(final FPoint point) {
         int j = Math.round(point.y / DY);
-        int i = Math.round( (1==(j&1)) ? point.x-0.5f : point.x);
+        int i = Math.round((1 == (j & 1)) ? point.x - 0.5f : point.x);
         return new Pivot(i,j);
     }
 
@@ -77,46 +77,64 @@ public class Board {
         return i + j*width;
     }
 
-    public boolean isValid(Unit unit, Pivot start, int angle) {
+    public Unit transform(Unit unit, UnitState state) {
+
         // todo support all other angles
-        if( 0 == (start.y & 1)) {
+
+        Unit result = new Unit();
+        result.members = new Pivot[unit.members.length];
+
+        if( 0 == (state.start.y & 1)) {
             // rendering starting from EVEN row
+
+            int i = unit.pivot.x + state.start.x;
+            int j = unit.pivot.y + state.start.y;
+            result.pivot = new Pivot(i,j);
+
+            int index=0;
             for (Pivot member : unit.members) {
-                int i = member.x + start.x;
-                int j = member.y + start.y;
-                if( i < 0 || i >= width || j >= height || readCell(i,j) != 0 ) return false;
+                i = member.x + state.start.x;
+                j = member.y + state.start.y;
+                result.members[index] = new Pivot(i,j);
+                ++index;
             }
         }
         else {
             // rendering starting from ODD row
+
+            int i = (unit.pivot.y & 1) == 0 ?  unit.pivot.x + state.start.x : unit.pivot.x + state.start.x + 1;
+            int j = unit.pivot.y + state.start.y;
+            result.pivot = new Pivot(i,j);
+
+            int index =1;
             for (Pivot member : unit.members) {
-                int i = (member.y & 1) == 0 ?  member.x + start.x : member.x + start.x + 1;
-                int j = member.y + start.y;
-                if( i < 0 || i >= width || j >= height || readCell(i,j) != 0 ) return false;
+                i = (member.y & 1) == 0 ?  member.x + state.start.x : member.x + state.start.x + 1;
+                j = member.y + state.start.y;
+                result.members[index] = new Pivot(i,j);
+                ++index;
             }
+        }
+
+        return result;
+    }
+
+    public boolean isValid(Unit unit, UnitState state) {
+        final Unit transformed = transform(unit, state);
+        for (Pivot member : unit.members) {
+            final int i = member.x;
+            final int j = member.y;
+            if( i < 0 || i >= width || j >= height || readCell(i,j) != 0 ) return false;
         }
         return true;
     }
 
-    public boolean updateBoard(Unit unit, Pivot start, int angle) {
-        // todo support all other angles
-        if( 0 == (start.y & 1)) {
-            // rendering starting from EVEN row
-            for (Pivot member : unit.members) {
-                int i = member.x + start.x;
-                int j = member.y + start.y;
-                setCell(i,j,CellState.FILLED.getState());
-            }
+    public void updateBoard(Unit unit, UnitState state) {
+        final Unit transformed = transform(unit, state);
+        for (Pivot member : unit.members) {
+            final int i = member.x;
+            final int j = member.y;
+            setCell(i, j, CellState.FILLED.getState());
         }
-        else {
-            // rendering starting from ODD row
-            for (Pivot member : unit.members) {
-                int i = (member.y & 1) == 0 ?  member.x + start.x : member.x + start.x + 1;
-                int j = member.y + start.y;
-                setCell(i,j,CellState.FILLED.getState());
-            }
-        }
-        return true;
     }
 
     public UnitState getSpawnState(Unit unit, Board unitBoard) {

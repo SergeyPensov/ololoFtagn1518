@@ -5,5 +5,6 @@ package finalStates;
  */
 public class Node {
     public int index;
+    public boolean isValid;
     public Node[] links;
 }

@@ -5,7 +5,7 @@ package finalStates;
  */
 public class Unit {
     public Pivot pivot;
-    Pivot[] members;
+    public Pivot[] members;
 
     @Override
     public String toString() {

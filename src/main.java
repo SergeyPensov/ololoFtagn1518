@@ -78,7 +78,7 @@ public class main {
                     ++unitCounter;
                 }
 
-                Solver solver = new Solver(problem);
+                Solver solver = new Solver(problem, inputFileName);
                 final SolverResult[] results = solver.solveAll(new int[]{problem.sourceSeeds[0]});
 
                 Gson gson = new Gson();
