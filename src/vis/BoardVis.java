@@ -13,9 +13,6 @@ public class BoardVis {
 
     private final static int SCALE = 32;
 
-//    private final static int zeroCellX = X_STEP;
-//    private final static int zeroCellY = X_STEP;
-
     public BufferedImage draw(Board board, Unit unit,  Unit[] nextUnits) {
 
         // detecting image size

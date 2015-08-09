@@ -71,8 +71,45 @@ public class Board {
         return i + j*width;
     }
 
-    public boolean isValid(Unit unit, Pivot pivot, int angle) {
-        // todo
-        return false;
+    public boolean isValid(Unit unit, Pivot start, int angle) {
+        // todo support all other angles
+        if( 0 == (start.y & 1)) {
+            // rendering starting from EVEN row
+            for (Pivot member : unit.members) {
+                int i = member.x + start.x;
+                int j = member.y + start.y;
+                if( i < 0 || i >= width || j >= height || readCell(i,j) != 0 ) return false;
+            }
+        }
+        else {
+            // rendering starting from ODD row
+            for (Pivot member : unit.members) {
+                int i = (member.y & 1) == 0 ?  member.x + start.x : member.x + start.x + 1;
+                int j = member.y + start.y;
+                if( i < 0 || i >= width || j >= height || readCell(i,j) != 0 ) return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean updateBoard(Unit unit, Pivot start, int angle) {
+        // todo support all other angles
+        if( 0 == (start.y & 1)) {
+            // rendering starting from EVEN row
+            for (Pivot member : unit.members) {
+                int i = member.x + start.x;
+                int j = member.y + start.y;
+                setCell(i,j,CellState.FILLED.getState());
+            }
+        }
+        else {
+            // rendering starting from ODD row
+            for (Pivot member : unit.members) {
+                int i = (member.y & 1) == 0 ?  member.x + start.x : member.x + start.x + 1;
+                int j = member.y + start.y;
+                setCell(i,j,CellState.FILLED.getState());
+            }
+        }
+        return true;
     }
 }
