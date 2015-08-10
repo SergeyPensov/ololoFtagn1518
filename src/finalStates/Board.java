@@ -40,7 +40,7 @@ public class Board {
         }
 
         width = Math.max(1, maxCx+1);
-        height = Math.max(1, maxCy+1);
+        height = Math.max(1, maxCy + 1);
         array = new int[width*height];
 
         setCell(unit.pivot, CellState.PIVOT.getState());
@@ -133,7 +133,7 @@ public class Board {
         return true;
     }
 
-    public void updateBoard(Unit unit, UnitState state) {
+    public int updateBoard(Unit unit, UnitState state) {
         final Unit transformed = transform(unit, state);
         for (Point member : transformed.members) {
             final int i = member.x;
@@ -173,9 +173,19 @@ public class Board {
             bonus += ((oldLinesKilled-1) * points / 10);
         }
 
-        score += points + bonus;
+        final int addedScore = points + bonus;
+        score += addedScore;
 
         oldLinesKilled = linesKilled;
+        return addedScore;
+    }
+
+    public int getPositionScore(Unit unit, UnitState state, int lockCounter) {
+
+        Board newBoard = new Board(this);
+        int addedScore = newBoard.updateBoard(unit, state);
+
+        return (addedScore<<4) + lockCounter;
     }
 
     public UnitState getSpawnState(Unit unit, Board unitBoard) {

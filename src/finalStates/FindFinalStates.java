@@ -28,13 +28,15 @@ public class FindFinalStates {
                             lockCounter++;
                         }
                     }
-                    if (lockCounter != 0)
-                        optimalUnitPositions.add(new OptimalUnitPosition(new UnitState(testState), lockCounter));
+                    if (lockCounter != 0) {
+                        int score = board.getPositionScore(unit, testState, lockCounter);
+                        optimalUnitPositions.add(new OptimalUnitPosition(new UnitState(testState), score));
+                    }
 
                 }
             }
         }
-        Collections.sort(optimalUnitPositions, (o1, o2) -> o2.lockCounter - o1.lockCounter);
+        Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
         return optimalUnitPositions;
     }
 

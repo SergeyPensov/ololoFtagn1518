@@ -5,18 +5,18 @@ package finalStates;
  */
 public class OptimalUnitPosition {
     public final UnitState state;
-    public final int lockCounter;
+    public final int score;
 
-    public OptimalUnitPosition(UnitState state, int lockCounter) {
+    public OptimalUnitPosition(UnitState state, int score) {
         this.state = state;
-        this.lockCounter = lockCounter;
+        this.score = score;
     }
 
     @Override
     public String toString() {
         return "OptimalUnitPosition{" +
                 "state=" + state +
-                ", lockCounter=" + lockCounter +
+                ", score=" + score +
                 '}';
     }
 }
