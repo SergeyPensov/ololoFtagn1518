@@ -32,17 +32,17 @@ public class Solver {
 
         Board board = problem.getBoard();
 
-        for( int f=0; f<unitsForTheGame.length; ++f) {
+        for (int f = 0; f < unitsForTheGame.length; ++f) {
             final int unitIndex = unitsForTheGame[f];
             final Unit unit = problem.units[unitIndex];
             final Board unitBoard = problem.unitBoards[unitIndex];
             final int[] nextUnits = Arrays.copyOfRange(unitsForTheGame, f + 1, unitsForTheGame.length);
             final String sequence = play(board, unit, unitBoard, nextUnits, f, seed);
-            if( sequence == null ) break; // GAME OVER
+            if (sequence == null) break; // GAME OVER
             sb.append(sequence).append("\n");
         }
 
-        System.out.println("score="+board.score);
+        System.out.println("score=" + board.score);
 
         final String solution = sb.toString();
         return new SolverResult(problem.id, seed, "", solution);
@@ -50,10 +50,10 @@ public class Solver {
 
     private Command findDirection(Board board, Unit unit, UnitState startState, UnitState endState, int depth, Set<UnitState> visitedStates) {
 
-        if( startState.equals(endState)) {
+        if (startState.equals(endState)) {
             // locking
             for (Command command : Command.commands) {
-                if( !board.isValid(unit, command.apply(startState)) ) {
+                if (!board.isValid(unit, command.apply(startState))) {
                     return command;
                 }
             }
@@ -61,16 +61,16 @@ public class Solver {
         }
 
         for (Command com : Command.commands) {
-            if( com.apply(startState).equals(endState) ) {
+            if (com.apply(startState).equals(endState)) {
                 return com;
             }
         }
 
-        if( depth == 0 ) return null;
-        
+        if (depth == 0) return null;
+
         for (Command com : Command.commands) {
             final UnitState nextState = com.apply(startState);
-            if( visitedStates.contains(nextState) == false && board.isValid(unit, nextState)) {
+            if (visitedStates.contains(nextState) == false && board.isValid(unit, nextState)) {
                 if (null != findDirection(board, unit, nextState, endState, depth - 1, visitedStates)) {
                     return com;
                 }
@@ -83,7 +83,7 @@ public class Solver {
     private String play(Board board, Unit unit, Board unitBoard, int[] nextUnits, int currentUnitIndex, int seed) {
 
         // creating graph 
-        Graph graph = new Graph(board.width, board.height);
+
 
         final UnitState spawnState = board.getSpawnState(unit, unitBoard);
 
@@ -96,16 +96,16 @@ public class Solver {
         Random random = new Random(17);
 
         boolean live = board.isValid(unit, spawnState);
-        if( !live) return null; // GAME OVER - spawn location is not valid
+        if (!live) return null; // GAME OVER - spawn location is not valid
 
         List<Command> commands = new ArrayList<>(100);
 
         // searching for good lock states
         UnitState goodDestination = null;
-        for( int y=board.height-1; y>=0 && goodDestination == null; y--) {
-            for( int x=0; x<board.width; ++x) {
-                UnitState destination = new UnitState(new Point(x,y), 0, board.width, board.height );
-                if( board.isValid(unit, destination)) {
+        for (int y = board.height - 1; y >= 0 && goodDestination == null; y--) {
+            for (int x = 0; x < board.width; ++x) {
+                UnitState destination = new UnitState(new Point(x, y), 0, board.width, board.height);
+                if (board.isValid(unit, destination)) {
                     goodDestination = destination;
                     break;
                 }
@@ -114,59 +114,21 @@ public class Solver {
 
         UnitState state = spawnState;
         int moveIndex = 1;
-        while(live) {
-
-            Command command = null;
-            UnitState nextState = null;
-
-            // moving in good direction
-            if( goodDestination != null) {
-
-                // checking if we can get to the destination with one specific command
-                command = findDirection(board, unit, state, goodDestination, 2, states);
-
-                if( null == command) {
-                    // direct command not found
-                    // choosing good direction
-                    if( goodDestination.start.y == state.start.y ) {
-                        // same level
-                        command = goodDestination.start.x < state.start.x ? Command.C_LEFT : Command.C_RIGHT;
-                    }
-                    else {
-                        command = goodDestination.start.x < state.start.x ? Command.C_SW : Command.C_SE;
-                    }
-                }
-
-                nextState = command.apply(state);
-                if( states.contains(nextState)) nextState = null;
+        FindFinalStates findFinalStates = new FindFinalStates(unit, board);
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap();
+        ThreeNode threeNode = null;
+        for (OptimalUnitPosition optimalUnitPosition : optimalUnitPositions) {
+            threeNode = findFinalStates.getAllPath(optimalUnitPosition, unit, board, unitBoard);
+            if (threeNode != null) {
+                break;
             }
 
-            if( nextState == null ) {
-                int it;
-                for (it = 10; it >= 0; it--) {
-                    int commandIndex = (random.nextInt() & 0xFF) % 4;
-                    command = Command.getCommand(commandIndex);
-                    nextState = command.apply(state);
-                    if (!states.contains(nextState)) break;
-                }
-
-                if (it < 0) {
-                    // cannot find good command
-                    // issuing this command will result in game error and score = 0
-                    System.out.println("Failed to find valid command");
-                }
-            }
-
-            commands.add(command);
-            states.add(nextState);
-            live = board.isValid(unit, nextState);
-
-            if( live ) {
-                state = nextState; // updating state if unit is not locked
-
-                drawFrame(board, unit, currentUnitIndex, state, moveIndex, seed);
-                moveIndex++;
-            }
+        }
+        if (threeNode == null) throw new RuntimeException("Problem with threeNode");
+        ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
+        for (int i = nodes.size() - 1; 0 <= i; i--) {
+            state = nodes.get(i).state;
+            drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed);
         }
 
         // updating the board with locked unit
@@ -188,7 +150,7 @@ public class Solver {
 
     public SolverResult[] solveAll(int[] seeds) {
         SolverResult[] result = new SolverResult[seeds.length];
-        for( int i=0; i<seeds.length; ++i) {
+        for (int i = 0; i < seeds.length; ++i) {
             result[i] = solve(seeds[i]);
         }
         return result;

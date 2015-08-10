@@ -40,7 +40,7 @@ public class UnitState {
 
     // todo take symmetry into account when calculating index
     public int getIndex() {
-        return 17 * start.x + 2560 * start.y + width + angle * wh;
+        return 17 * (start.x + 1) + 2560 * (start.y + 1) + width + angle * wh;
     }
 
     @Override
