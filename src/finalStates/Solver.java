@@ -133,7 +133,7 @@ public class Solver {
                         command = goodDestination.start.x < state.start.x ? Command.C_LEFT : Command.C_RIGHT;
                     }
                     else {
-                        command = goodDestination.start.x < state.start.x ? Command.C_SW : Command.C_SW;
+                        command = goodDestination.start.x < state.start.x ? Command.C_SW : Command.C_SE;
                     }
                 }
 
