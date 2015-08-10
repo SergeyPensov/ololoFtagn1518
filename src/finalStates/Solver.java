@@ -16,10 +16,12 @@ public class Solver {
 
     private Problem problem;
     private String path;
+    private final boolean saveImages;
 
-    public Solver(Problem problem, String path) {
+    public Solver(Problem problem, String path, boolean saveImages) {
         this.problem = problem;
         this.path = path;
+        this.saveImages = saveImages;
     }
 
     public SolverResult solve(int seed) {
@@ -87,7 +89,7 @@ public class Solver {
 
         final UnitState spawnState = board.getSpawnState(unit, unitBoard);
 
-        drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed);
+        if( saveImages ) drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed);
 
         // playing random
         Set<UnitState> states = new HashSet<>();
@@ -164,14 +166,14 @@ public class Solver {
             if( live ) {
                 state = nextState; // updating state if unit is not locked
 
-                drawFrame(board, unit, currentUnitIndex, state, moveIndex, seed);
+                if( saveImages ) drawFrame(board, unit, currentUnitIndex, state, moveIndex, seed);
                 moveIndex++;
             }
         }
 
         // updating the board with locked unit
         board.updateBoard(unit, state);
-        drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed);
+        if( saveImages ) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed);
 
         return Command.encode(commands);
     }

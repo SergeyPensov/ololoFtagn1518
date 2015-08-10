@@ -38,6 +38,7 @@ public class main {
         Integer timeLimit = null;
         Integer memoryLimit = null;
         Integer cpuCoresCount = null;
+        boolean saveImages = false;
 
         for (int i = 0; i < args.length; i += 2) {
             final String opt = args[i];
@@ -51,6 +52,8 @@ public class main {
                 phrases.add(args[i + 1]);
             } else if (opt.equals("-c")) {
                 cpuCoresCount = Integer.parseInt(args[i + 1]);
+            } else if( opt.equals("-saveimages")) {
+                saveImages = true;
             }
         }
 
@@ -60,10 +63,12 @@ public class main {
                 Problem problem = Problem.read(json);
                 Board board = problem.getBoard();
 
-                // drawing initial board state
-                BoardVis vis = new BoardVis();
-                BufferedImage image = vis.draw(board, null, null);
-                ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
+                if( saveImages ) {
+                    // drawing initial board state
+                    BoardVis vis = new BoardVis();
+                    BufferedImage image = vis.draw(board, null, null);
+                    ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
+                }
 /*
 
                 // drawing units
@@ -83,7 +88,7 @@ public class main {
                 if (threeNode != null) {
                     System.out.println(FindFinalStates.getShortPath(threeNode.finalThreeNode));
                 }
-                Solver solver = new Solver(problem, inputFileName);
+                Solver solver = new Solver(problem, inputFileName, saveImages);
                 final SolverResult[] results = solver.solveAll();
 
                 Gson gson = new Gson();
@@ -120,6 +125,6 @@ public class main {
             }
         }
 
-        return sb.toString();
+        return sb.toString().replaceAll("\n","");
     }
 }
