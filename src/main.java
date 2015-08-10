@@ -63,12 +63,12 @@ public class main {
                 Problem problem = Problem.read(json);
                 Board board = problem.getBoard();
 
-                if( saveImages ) {
+//                if( saveImages ) {
                     // drawing initial board state
                     BoardVis vis = new BoardVis();
                     BufferedImage image = vis.draw(board, null, null, null);
                     ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
-                }
+//                }
 /*
 
                 // drawing units
