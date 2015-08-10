@@ -60,7 +60,8 @@ public class ThreeNode {
     }
 
     public static boolean createChildNode(ThreeNode parent, Command command, UnitState childState, Board board, Unit unit, UnitState finalState, LinkedHashMap<UnitState, ThreeNode> nodeHashMap) {
-        if ((parent.command == Command.C_LEFT && command == Command.C_RIGHT) || (parent.command == Command.C_RIGHT && command == Command.C_LEFT)) {
+        if ((parent.command == Command.C_LEFT && command == Command.C_RIGHT) || (parent.command == Command.C_RIGHT && command == Command.C_LEFT) ||
+                ((parent.command == Command.C_CCW || parent.command == Command.C_CW) && (command == Command.C_CCW || command == Command.C_CW))  ) {
             removeChild(parent);
             return false;
         }

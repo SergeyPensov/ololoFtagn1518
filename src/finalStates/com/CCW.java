@@ -17,4 +17,9 @@ public class CCW extends Command {
     public UnitState apply(UnitState s) {
         return new UnitState(s.start, (s.angle+5)%6);
     }
+
+    @Override
+    public String toString() {
+        return "CCW{}";
+    }
 }
