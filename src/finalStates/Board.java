@@ -185,7 +185,7 @@ public class Board {
         Board newBoard = new Board(this);
         int addedScore = newBoard.updateBoard(unit, state);
 
-        return ((addedScore<<4) + lockCounter)*2 + state.start.y;
+        return ((addedScore<<4) + lockCounter)*3 + state.start.y*2;
     }
 
     public UnitState getSpawnState(Unit unit, Board unitBoard) {
