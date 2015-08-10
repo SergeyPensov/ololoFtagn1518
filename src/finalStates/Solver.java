@@ -87,7 +87,7 @@ public class Solver {
         // creating graph 
         final UnitState spawnState = board.getSpawnState(unit, unitBoard);
 
-        if( saveImages ) drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
+        if (saveImages) drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
 
         // playing random
         Set<UnitState> states = new HashSet<>();
@@ -125,7 +125,7 @@ public class Solver {
             }
 
         }
-        if (threeNode == null) throw new RuntimeException("Problem with threeNode");
+        if (threeNode == null) return Command.encode(new LinkedList<>());
         ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
         for (int i = nodes.size() - 1; 0 <= i; i--) {
             state = nodes.get(i).state;
@@ -136,18 +136,18 @@ public class Solver {
         // generating lock command
         boolean lockFound = false;
         for (Command command : Command.commands) {
-            if( !board.isValid(unit, command.apply(state))) {
+            if (!board.isValid(unit, command.apply(state))) {
                 lockFound = true;
                 commands.add(command);
                 break;
             }
         }
 
-        if( !lockFound) throw new RuntimeException("lock command cannot be found!");
+        if (!lockFound) throw new RuntimeException("lock command cannot be found!");
 
         // updating the board with locked unit
         board.updateBoard(unit, state);
-        if( saveImages ) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed, null);
+        if (saveImages) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed, null);
 
         return Command.encode(commands);
     }
