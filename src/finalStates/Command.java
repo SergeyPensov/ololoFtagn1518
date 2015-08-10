@@ -18,7 +18,7 @@ public abstract class Command {
     public static final Command C_CW = new CW();
     public static final Command C_CCW = new CCW();
 
-    public static Command[] commands = {C_LEFT, C_RIGHT, C_SW };//, C_SE, C_CCW };
+    public static Command[] commands = {C_LEFT, C_RIGHT, C_SW, C_SE, C_CW, C_CCW };
 
     public static Command getCommand(int index) {
         return commands[index];
