@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="jquery.js"></script>
+<script src="json2.js"></script>
+
+
+<script src="graphic.js"></script>
+<script src="main.js"></script>
+<script src="rand.js"></script>
+<script src="long.js"></script>
+<style>
+	.control{
+		position: absolute;
+		right: 0;
+		width: 400px;
+	}
+	button{
+		width: 95px;
+	}
+	textarea{
+		width: 390px;
+		height: 100px;
+	}
+</style>
+</head>
+
+<body>
+	<div class="control">
+		<b>Problem:</b><br/>
+		<textarea id="problem_text">{"height":10,"width":10,"sourceSeeds":[0],"units":[{"members":[{"x":0,"y":0}],"pivot":{"x":0,"y":0}},{"members":[{"x":0,"y":0},{"x":2,"y":0}],"pivot":{"x":1,"y":0}},{"members":[{"x":0,"y":0},{"x":0,"y":2}],"pivot":{"x":0,"y":1}},{"members":[{"x":2,"y":0},{"x":0,"y":1},{"x":2,"y":2}],"pivot":{"x":1,"y":1}},{"members":[{"x":0,"y":0},{"x":1,"y":1},{"x":0,"y":2}],"pivot":{"x":0,"y":1}},{"members":[{"x":0,"y":0},{"x":1,"y":0}],"pivot":{"x":0,"y":0}},{"members":[{"x":0,"y":0},{"x":1,"y":0}],"pivot":{"x":1,"y":0}},{"members":[{"x":0,"y":0},{"x":0,"y":1}],"pivot":{"x":0,"y":0}},{"members":[{"x":0,"y":0},{"x":0,"y":1}],"pivot":{"x":0,"y":1}},{"members":[{"x":0,"y":0},{"x":1,"y":0},{"x":2,"y":0}],"pivot":{"x":0,"y":0}},{"members":[{"x":0,"y":0},{"x":1,"y":0},{"x":2,"y":0}],"pivot":{"x":1,"y":0}},{"members":[{"x":0,"y":0},{"x":1,"y":0},{"x":2,"y":0}],"pivot":{"x":2,"y":0}},{"members":[{"x":0,"y":0},{"x":0,"y":1},{"x":0,"y":2}],"pivot":{"x":0,"y":0}},{"members":[{"x":0,"y":0},{"x":0,"y":1},{"x":0,"y":2}],"pivot":{"x":0,"y":1}},{"members":[{"x":0,"y":0},{"x":0,"y":1},{"x":0,"y":2}],"pivot":{"x":0,"y":2}},{"members":[{"x":1,"y":0},{"x":0,"y":1},{"x":1,"y":2}],"pivot":{"x":1,"y":0}},{"members":[{"x":1,"y":0},{"x":0,"y":1},{"x":1,"y":2}],"pivot":{"x":1,"y":1}},{"members":[{"x":1,"y":0},{"x":0,"y":1},{"x":1,"y":2}],"pivot":{"x":1,"y":2}}],"id":0,"filled":[],"sourceLength":100}</textarea><br/>
+		<b>Seed:</b><br/>
+		<input id="seed_num" type="text" value="0"/><br/>
+		<b>Commands:</b><br/>
+		<textarea id="command_list">iiiiiiiimmiiiiiimimmiiiimimimmimimimimmimimimeemimeeeemimim
+					imimiiiiiimmeemimimimimiimimimmeemimimimmeeeemimimimmiiiiii
+					pmiimimimeeemmimimmemimimimiiiiiimeeemimimimimeeemimimimmii
+					iimemimimmiiiipimeeemimimmiiiippmeeeeemimimimiiiimmimimeemi
+					mimeeeemimimiiiipmeeemmimmiimimmmimimeemimimimmeeemimiiiiip
+					miiiimmeeemimimiiiipmmiipmmimmiippimemimeeeemimmiipppmeeeee
+					mimimmiimipmeeeemimimiimmeeeeemimmeemimmeeeemimiiippmiippmi
+					iimmiimimmmmmeeeemimmiippimmimimeemimimimmeemimimimmeemimim
+					imiimimimeeemmimimmmiiiiipimeemimimimmiiiimimmiiiiiiiimiimi
+					mimimeeemmimimimmiiiiiimimmemimimimimmimimimeemimiiiiiiiimi
+					iiimimimiimimimmimmimimimimmeeeemimimimimmmimimimimeemimimi
+					mimmmemimimmiiiiiiimiimimimmiiiiiimeeeeemimimimimmimimimmmm
+					emimimmeeeemimimimmiimimimmiiiiiipmeeeeemimimimimmiiiiimmem
+					imimimimmmmimimmeeeemimimimimeeemimimimmiimimimeeemmimimmii
+					iiiiimimiiiiiimimmiiiiiiiimmimimimimiiiimimimeemimimimimmee
+					emimimimimiiiiiiimiiiimimmemimimimmeemimimimeeemmimimmiiiii
+					immiiiipmmiiimmmimimeemimimeeemmimmiiiippmiiiimiiippimiimim
+					eemimimeeeemimimiiiipmeemimimiimiimimmimeeemimimmippipmmiim
+					emimmipimeeeemimmeemimiippimeeeeemimimmmimmmeeeemimimiiipim
+					miipmemimmeeeemimimiipipimmipppimeeemimmpppmmpmeeeeemimmemm</textarea><br/>
+		<button id="problem_btn">send problem</button><br/>
+		<br/>
+		<hr/>
+		<button id="next_btn">next</button><br/>
+		<button id="timer_btn">timer</button><br/>
+		<br/>
+	</div>
+	
+	<canvas  id="paint_canvas" ></canvas>
+</body>
+</html>

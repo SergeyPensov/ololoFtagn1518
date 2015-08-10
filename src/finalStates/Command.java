@@ -1,9 +1,6 @@
 package finalStates;
 
-import finalStates.com.Left;
-import finalStates.com.Right;
-import finalStates.com.SE;
-import finalStates.com.SW;
+import finalStates.com.*;
 
 import java.util.List;
 
@@ -18,8 +15,10 @@ public abstract class Command {
     public static final Command C_RIGHT = new Right();
     public static final Command C_SW = new SW();
     public static final Command C_SE = new SE();
+    public static final Command C_CW = new CW();
+    public static final Command C_CCW = new CCW();
 
-    public static Command[] commands = {C_LEFT, C_RIGHT, C_SW, C_SE };
+    public static Command[] commands = {C_LEFT, C_RIGHT, C_SW };//, C_SE, C_CCW };
 
     public static Command getCommand(int index) {
         return commands[index];
