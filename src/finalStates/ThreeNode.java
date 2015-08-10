@@ -50,10 +50,12 @@ public class ThreeNode {
 
     public static void removeChild(ThreeNode node) {
         if (node.child.size() != 0) return;
-        if (node.parent == null) return;
-        while (node.parent.child.size() == 1) {
-            node.parent.child.remove(node.command);
-            node = node.parent;
+        if (!(node.parent == null)) {
+            while (node.parent.child.size() == 1) {
+                node.parent.child.remove(node.command);
+                node = node.parent;
+                if (node.parent == null) return;
+            }
         }
     }
 
