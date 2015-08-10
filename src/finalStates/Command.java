@@ -111,5 +111,5 @@ public abstract class Command {
 //        return command.letters().charAt(position);
 //    }
 
-    public static final String[] magicWords = {"hex","ei!","monkeyboy!","yggoth","cthulhu","trolls!","davar", "ia! ia!2", "r'lyeh", "fhtagn"};
+    public static final String[] magicWords = {"hex","ei!","monkeyboy!", "yuggoth", "cthulhu", "trolls!", "davar", "ia! ia!2", "r'lyeh", "fhtagn", "         ", "galois", "eldritch"};
 }
