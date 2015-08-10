@@ -115,10 +115,12 @@ public class Solver {
         }
         if (threeNode == null) return Command.encode(new LinkedList<>());
         ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
+        System.out.println(nodes.size());
         for (int i = nodes.size() - 1; 0 <= i; i--) {
             state = nodes.get(i).state;
+
             commands.add(nodes.get(i).command);
-            if (saveImages) drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
+            if (saveImages)  drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
         }
 
         // generating lock command
