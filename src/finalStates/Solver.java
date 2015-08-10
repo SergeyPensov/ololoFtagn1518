@@ -41,7 +41,7 @@ public class Solver {
             final int[] nextUnits = Arrays.copyOfRange(unitsForTheGame, f + 1, unitsForTheGame.length);
             final String sequence = play(board, unit, unitBoard, nextUnits, f, seed);
             if (sequence == null) break; // GAME OVER
-            sb.append(sequence).append("\n");
+            sb.append(sequence);
         }
 
         System.out.println("score=" + board.score);
@@ -85,8 +85,6 @@ public class Solver {
     private String play(Board board, Unit unit, Board unitBoard, int[] nextUnits, int currentUnitIndex, int seed) {
 
         // creating graph 
-
-
         final UnitState spawnState = board.getSpawnState(unit, unitBoard);
 
         if( saveImages ) drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed);
@@ -130,6 +128,7 @@ public class Solver {
         ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
         for (int i = nodes.size() - 1; 0 <= i; i--) {
             state = nodes.get(i).state;
+            commands.add(nodes.get(i).command);
             drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed);
         }
 
