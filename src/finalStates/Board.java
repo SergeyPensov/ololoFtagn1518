@@ -147,7 +147,7 @@ public class Board {
         int linesKilled = 0;
         for( int y=height-1; y>=0; y--) {
             boolean filled = true;
-            for( int x=0; x<height; ++x) {
+            for( int x=0; x<width; ++x) {
                 if( readCell(x,y) == 0) {
                     filled = false;
                     break;
