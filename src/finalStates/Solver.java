@@ -114,7 +114,9 @@ public class Solver {
 
         UnitState state = spawnState;
         int moveIndex = 1;
-        Unit[] nextUnitsRefs = {problem.units[nextUnits[0]]};
+        Unit[] nextUnitsRefs = null;
+        if( nextUnits.length != 0 ) nextUnitsRefs = new Unit[]{problem.units[nextUnits[0]]};
+
         FindFinalStates findFinalStates = new FindFinalStates(unit, board, nextUnitsRefs);
         ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap();
         ThreeNode threeNode = null;

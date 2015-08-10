@@ -1,6 +1,8 @@
 package finalStates;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by kirill on 8/8/2015.
@@ -25,7 +27,7 @@ public class Board {
     public Board(Board b) {
         width = b.width;
         height = b.height;
-        array = Arrays.copyOf(b.array,b.array.length);
+        array = Arrays.copyOf(b.array, b.array.length);
         score = b.score;
         oldLinesKilled = b.oldLinesKilled;
     }
@@ -182,8 +184,47 @@ public class Board {
 
     public int getPositionScore(Unit unit, UnitState state, int lockCounter) {
 
-        Board newBoard = new Board(this);
-        int addedScore = newBoard.updateBoard(unit, state);
+        final Unit transformed = transform(unit, state);
+        for (Point member : transformed.members) {
+            final int i = member.x;
+            final int j = member.y;
+            setCell(i, j, CellState.FILLED.getState());
+        }
+
+        Set<Integer> checkedY = new HashSet<>(unit.members.length);
+
+        int linesKilled = 0;
+        for (Point member : transformed.members) {
+            if( checkedY.contains(member.y) == false) {
+                checkedY.add(member.y);
+
+                boolean filled = true;
+                for( int x=0; x<width; ++x) {
+                    if( readCell(x,member.y) == 0) {
+                        filled = false;
+                        break;
+                    }
+                }
+                if( filled ) linesKilled++;
+            }
+        }
+
+        // cleaning
+        for (Point member : transformed.members) {
+            final int i = member.x;
+            final int j = member.y;
+            setCell(i, j, CellState.FREE.getState());
+        }
+
+        int points = unit.members.length;
+        points += 100 *(1 + linesKilled) * linesKilled / 2;
+
+        int bonus = 0;
+        if( oldLinesKilled != 0 ) {
+            bonus += ((oldLinesKilled-1) * points / 10);
+        }
+
+        final int addedScore = points + bonus;
 
         return ((addedScore<<4) + lockCounter)*3 + state.start.y*2;
     }
