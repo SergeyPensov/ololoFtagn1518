@@ -86,9 +86,10 @@ public class main {
 
                 Gson gson = new Gson();
                 final String resultJSON = gson.toJson(results);
-                saveFile(inputFileName + "_result.json", resultJSON);
+                final String resultJsonFile = inputFileName + "_result.json";
+                saveFile(resultJsonFile, resultJSON);
 
-                final String submit = formatSubmitScript(resultJSON);
+                final String submit = formatSubmitScript(resultJsonFile);
                 saveFile(inputFileName + "_result_submit.bat", submit);
 
             } catch (IOException e) {
@@ -98,13 +99,13 @@ public class main {
 
     }
 
-    private static String formatSubmitScript(String resultJSON) {
+    private static String formatSubmitScript( String jsonResultFile) {
         final String API_TOKEN = ":plrVW5TJZhcAW/2HmsWBJOnGd2vwab+5Ssq9Y1HVggk=";
         final String TEAM_ID = "195";
-        final String OUTPUT = escape(resultJSON);
+//        final String OUTPUT = escape(resultJSON);
 
-        return String.format("c:/soft/curl -k --user %s -X POST -H \"Content-Type: application/json\" -d %s https://davar.icfpcontest.org/teams/%s/solutions\n@echo\n@pause\n",
-                API_TOKEN, OUTPUT, TEAM_ID);
+        return String.format("c:/soft/curl -k --user %s -X POST -H \"Content-Type: application/json\" -d @%s https://davar.icfpcontest.org/teams/%s/solutions\n@echo off\n@pause\n",
+                API_TOKEN, jsonResultFile, TEAM_ID);
     }
 
     private static String escape(final String resultJSON) {

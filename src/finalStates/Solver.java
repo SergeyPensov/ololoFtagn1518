@@ -87,7 +87,7 @@ public class Solver {
         // creating graph 
         final UnitState spawnState = board.getSpawnState(unit, unitBoard);
 
-        if (saveImages) drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
+        drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
 
         // playing random
         Set<UnitState> states = new HashSet<>();
@@ -143,7 +143,9 @@ public class Solver {
     private void drawFrame(Board board, Unit unit, int currentUnitIndex, UnitState state, int moveIndex, int seed, Command command) {
         if( !saveImages ) return;
         final BufferedImage image = BoardVis.draw(board, unit, state, command);
-        final String fileNmae = String.format("%s_seed%d_play_u%03d_i%03d.png", path, seed, currentUnitIndex, moveIndex);
+        final String baseFileName = new File(path).getParent() + "/images/" + new File(path).getName() + "/";
+        new File(baseFileName).mkdirs();
+        final String fileNmae = String.format("%sseed%d_play_u%03d_i%03d.png", baseFileName, seed, currentUnitIndex, moveIndex);
         try {
             ImageIO.write(image, "png", new File(fileNmae));
         } catch (IOException e) {
