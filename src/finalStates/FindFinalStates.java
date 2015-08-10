@@ -11,7 +11,7 @@ public class FindFinalStates {
     private final Board board;
     private final Unit unit;
 
-    public FindFinalStates(Unit unit, Board board) {
+    public FindFinalStates(Unit unit, Board board, Unit[] nextUnits) {
         this.board = board;
         this.unit = unit;
     }

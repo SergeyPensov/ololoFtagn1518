@@ -93,28 +93,29 @@ public class Solver {
         Set<UnitState> states = new HashSet<>();
         states.add(spawnState);
 
-        Random random = new Random(17);
+//        Random random = new Random(17);
 
         boolean live = board.isValid(unit, spawnState);
         if (!live) return null; // GAME OVER - spawn location is not valid
 
         List<Command> commands = new ArrayList<>(100);
 
-        // searching for good lock states
-        UnitState goodDestination = null;
-        for (int y = board.height - 1; y >= 0 && goodDestination == null; y--) {
-            for (int x = 0; x < board.width; ++x) {
-                UnitState destination = new UnitState(new Point(x, y), 0, board.width, board.height);
-                if (board.isValid(unit, destination)) {
-                    goodDestination = destination;
-                    break;
-                }
-            }
-        }
+//        // searching for good lock states
+//        UnitState goodDestination = null;
+//        for (int y = board.height - 1; y >= 0 && goodDestination == null; y--) {
+//            for (int x = 0; x < board.width; ++x) {
+//                UnitState destination = new UnitState(new Point(x, y), 0, board.width, board.height);
+//                if (board.isValid(unit, destination)) {
+//                    goodDestination = destination;
+//                    break;
+//                }
+//            }
+//        }
 
         UnitState state = spawnState;
         int moveIndex = 1;
-        FindFinalStates findFinalStates = new FindFinalStates(unit, board);
+        Unit[] nextUnitsRefs = {problem.units[nextUnits[0]]};
+        FindFinalStates findFinalStates = new FindFinalStates(unit, board, nextUnitsRefs);
         ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap();
         ThreeNode threeNode = null;
         for (OptimalUnitPosition optimalUnitPosition : optimalUnitPositions) {
