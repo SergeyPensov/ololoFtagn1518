@@ -81,13 +81,6 @@ public class main {
                 }
 
 */
-                FindFinalStates findFinalStates = new FindFinalStates(problem.units[0], board);
-                ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap();
-                Board unitBoard = new Board(problem.units[0]);
-                ThreeNode threeNode = findFinalStates.getAllPath(optimalUnitPositions.get(0), problem.units[0], board, unitBoard);
-                if (threeNode != null) {
-                    System.out.println(FindFinalStates.getShortPath(threeNode.finalThreeNode));
-                }
                 Solver solver = new Solver(problem, inputFileName, saveImages);
                 final SolverResult[] results = solver.solveAll();
 
