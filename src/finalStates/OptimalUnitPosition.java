@@ -11,4 +11,12 @@ public class OptimalUnitPosition {
         this.state = state;
         this.lockCounter = lockCounter;
     }
+
+    @Override
+    public String toString() {
+        return "OptimalUnitPosition{" +
+                "state=" + state +
+                ", lockCounter=" + lockCounter +
+                '}';
+    }
 }

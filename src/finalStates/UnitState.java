@@ -40,7 +40,7 @@ public class UnitState {
 
     // todo take symmetry into account when calculating index
     public int getIndex() {
-        return start.x + start.y * width + angle * wh;
+        return 17 * start.x + 2560 * start.y + width + angle * wh;
     }
 
     @Override
@@ -53,6 +53,6 @@ public class UnitState {
         if (obj == null || !(obj instanceof UnitState)) return false;
 
         UnitState us = (UnitState) obj;
-        return getIndex() == us.getIndex();
+        return (start.x == us.start.x) && (start.y == us.start.y) && (angle == us.angle);
     }
 }

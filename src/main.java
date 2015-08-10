@@ -24,7 +24,7 @@ public class main {
     }
 
     private static void saveFile(final String path, final String text) throws IOException {
-        try( FileOutputStream fos = new FileOutputStream(new File(path))) {
+        try (FileOutputStream fos = new FileOutputStream(new File(path))) {
             byte[] data = text.getBytes(Charset.defaultCharset());
             fos.write(data);
             fos.close();
@@ -69,7 +69,7 @@ public class main {
                 // drawing units
                 int unitCounter = 0;
                 for (Unit unit : problem.units) {
-                    Board unitBoard = new Board(unit);
+
                     image = vis.draw(unitBoard, null, null);
                     ImageIO.write(image, "png", new File(String.format("%s_unit_%02d.png", inputFileName, unitCounter)));
                     ++unitCounter;
@@ -77,7 +77,12 @@ public class main {
 
 */
                 FindFinalStates findFinalStates = new FindFinalStates(problem.units[0], board);
-                findFinalStates.getOptimalPositionInMap();
+                ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap();
+                Board unitBoard = new Board(problem.units[0]);
+                ThreeNode threeNode = findFinalStates.getAllPath(optimalUnitPositions.get(0), problem.units[0], board, unitBoard);
+                if (threeNode != null) {
+                    System.out.println(FindFinalStates.getShortPath(threeNode.finalThreeNode));
+                }
                 Solver solver = new Solver(problem, inputFileName);
                 final SolverResult[] results = solver.solveAll();
 
