@@ -18,7 +18,7 @@ public class FindFinalStates {
         ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>();
         for (int j = 0; j < board.height; j++) {
             for (int i = 0; i < board.width; i++) {
-                for(int a=0; a<5; ++a) {
+                for (int a = 0; a < 5; ++a) {
                     Point testPoint = new Point(i, board.height - j - 1);
                     UnitState testState = new UnitState(testPoint, a);
                     if (board.isValid(unit, testState)) {
@@ -53,6 +53,7 @@ public class FindFinalStates {
             int createCounter = 0;
             for (ThreeNode node : nextParent) {
                 if (ThreeNode.creatorNextNodes(node, optimalUnitPosition.state, nodeHashMap)) {
+                    if (parent.finalState == true) return parent;
                     createCounter++;
                     for (Command key : node.child.keySet()) {
                         childNodes.add(node.child.get(key));
@@ -66,8 +67,6 @@ public class FindFinalStates {
                 childNodes.clear();
             }
         }
-        System.out.println(nodeHashMap.size());
-        System.out.println(nodeHashMap.keySet().toString());
         if (parent.finalState != false) return parent;
         return null;
     }
