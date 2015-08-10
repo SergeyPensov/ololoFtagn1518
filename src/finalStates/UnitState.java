@@ -6,24 +6,18 @@ package finalStates;
 public class UnitState {
     public final Point start; // local coordinate system shift
     public final int angle; // 0..5
-    public final int width;
-    public final int height;
-    public final int wh;
+    private static final int width = 10000;
+    private static final int height = 10000;
+    private final int wh = width * height;
 
-    public UnitState(Point start, int angle, int width, int height) {
+    public UnitState(Point start, int angle) {
         this.start = start;
         this.angle = angle;
-        this.width = width;
-        this.height = height;
-        this.wh = width * height;
     }
 
     public UnitState(UnitState state) {
         this.start = state.start;
         this.angle = state.angle;
-        this.width = state.width;
-        this.height = state.height;
-        this.wh = width * height;
     }
 
     public UnitState applyCommand(Command c) {
@@ -40,7 +34,7 @@ public class UnitState {
 
     // todo take symmetry into account when calculating index
     public int getIndex() {
-        return 17 * (start.x + 1) + 2560 * (start.y + 1) + width + angle * wh;
+        return start.x + width * start.y + angle * wh;
     }
 
     @Override

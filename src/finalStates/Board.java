@@ -182,6 +182,6 @@ public class Board {
         int i = (width - unitBoard.width)/2;
         int j = 0;
 
-        return new UnitState(new Point(i,j), 0, width, height );
+        return new UnitState(new Point(i,j), 0);
     }
 }

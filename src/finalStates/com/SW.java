@@ -17,7 +17,7 @@ public class SW extends Command {
     @Override
     public UnitState apply(UnitState s) {
         final int newX = 0 == (s.start.y & 1) ? s.start.x - 1 : s.start.x;
-        return new UnitState(new Point(newX, s.start.y+1), s.angle, s.width, s.height );
+        return new UnitState(new Point(newX, s.start.y+1), s.angle);
     }
 
     @Override

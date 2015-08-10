@@ -1,7 +1,5 @@
 package finalStates;
 
-import finalStates.*;
-
 import java.util.*;
 
 /**
@@ -21,7 +19,7 @@ public class FindFinalStates {
         for (int j = 0; j < board.height; j++) {
             for (int i = 0; i < board.width; i++) {
                 Point testPoint = new Point(i, board.height - j - 1);
-                UnitState testState = new UnitState(testPoint, 0, 0, 0);
+                UnitState testState = new UnitState(testPoint, 0);
                 if (board.isValid(unit, testState)) {
                     int lockCounter = 0;
                     for (int k = 0; k < Command.commands.length; k++) {
