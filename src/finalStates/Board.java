@@ -83,7 +83,7 @@ public class Board {
         if (i < 0 || i >= width || j < 0 || j >= height) throw new IllegalArgumentException("indexes out of bounds");
         return i + j * width;
     }
-
+/*
     private Unit rotate(Unit unit, int angle) {
 
         Unit result = new Unit();
@@ -110,6 +110,37 @@ public class Board {
             float hex_x2 = (float) (rl2x - ((hex_y2 % 2) == 0 ? 0 : 0.5));
 
             result.members[i] = new Point(Math.round(hex_x2), Math.round(hex_y2));
+        }
+
+        return result;
+    }
+*/
+
+    private Unit rotate(Unit unit, int angle) {
+
+        Unit result = new Unit();
+        result.pivot = unit.pivot;
+        result.members = new Point[unit.members.length];
+
+        FPoint fPivot = getCoordsForIndexes(unit.pivot);
+
+        final float alpha = (float) (Math.PI / 3) * angle;
+        final float cosA = (float) Math.cos(alpha);
+        final float sinA = (float) Math.sin(alpha);
+
+        for (int i = 0; i < unit.members.length; i++) {
+
+            FPoint fPoint = getCoordsForIndexes(unit.members[i]);
+
+            fPoint.x -= fPivot.x;
+            fPoint.y -= fPivot.y;
+
+            final float rl2x = fPoint.x * cosA - fPoint.y * sinA + fPivot.x;
+            final float rl2y = fPoint.x * sinA + fPoint.y * cosA + fPivot.y;
+
+            Point newHex = getIndexForCoordinates(new FPoint(rl2x, rl2y));
+
+            result.members[i] = newHex;
         }
 
         return result;

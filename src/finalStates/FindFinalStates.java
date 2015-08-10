@@ -66,8 +66,8 @@ public class FindFinalStates {
                 childNodes.clear();
             }
         }
-        System.out.println(nodeHashMap.size());
-        System.out.println(nodeHashMap.keySet().toString());
+//        System.out.println(nodeHashMap.size());
+//        System.out.println(nodeHashMap.keySet().toString());
         if (parent.finalState != false) return parent;
         return null;
     }
