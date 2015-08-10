@@ -101,7 +101,7 @@ public class Solver {
         UnitState state = spawnState;
         int moveIndex = 1;
         Unit[] nextUnitsRefs = null;
-        if( nextUnits.length != 0 ) nextUnitsRefs = new Unit[]{problem.units[nextUnits[0]]};
+        if (nextUnits.length != 0) nextUnitsRefs = new Unit[]{problem.units[nextUnits[0]]};
 
         FindFinalStates findFinalStates = new FindFinalStates(unit, board, nextUnitsRefs);
         ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap();
@@ -115,10 +115,12 @@ public class Solver {
         }
         if (threeNode == null) return Command.encode(new LinkedList<>());
         ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
+        System.out.println(nodes.size());
         for (int i = nodes.size() - 1; 0 <= i; i--) {
             state = nodes.get(i).state;
+
             commands.add(nodes.get(i).command);
-            drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
+            if (saveImages)  drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
         }
 
         // generating lock command
@@ -136,12 +138,12 @@ public class Solver {
         // updating the board with locked unit
         board.updateBoard(unit, state);
         if (saveImages) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed, null);
-
+        System.out.println("I'm work");
         return Command.encode(commands);
     }
 
     private void drawFrame(Board board, Unit unit, int currentUnitIndex, UnitState state, int moveIndex, int seed, Command command) {
-        if( !saveImages ) return;
+        if (!saveImages) return;
         final BufferedImage image = BoardVis.draw(board, unit, state, command);
         final String baseFileName = new File(path).getParent() + "/images/" + new File(path).getName() + "/";
         new File(baseFileName).mkdirs();

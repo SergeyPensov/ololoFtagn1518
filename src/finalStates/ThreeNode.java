@@ -95,6 +95,7 @@ public class ThreeNode {
         int createCounter = 0;
         for (int i = 0; i < Command.commands.length; i++) {
             if (createChildNode(parent, Command.getCommand(i), parent.state.applyCommand(Command.getCommand(i)), parent.board, parent.unit, finalState, nodeHashMap)) {
+                if(parent.genParent.finalState == true) return true;
                 createCounter++;
             }
         }
