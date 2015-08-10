@@ -13,7 +13,7 @@ public class BoardVis {
 
     private final static int SCALE = 32;
 
-    public static BufferedImage draw(Board board, Unit unit, UnitState state) {
+    public static BufferedImage draw(Board board, Unit unit, UnitState state, Command command) {
 
         // detecting image size
         FPoint f0 = Board.getCoordsForIndexes(new Point(0, 0));
@@ -22,7 +22,7 @@ public class BoardVis {
         int width = (int) ((f1.x - f0.x + 1)*SCALE);
         int height = (int) ((f1.y - f0.y + 1)*SCALE);
 
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage image = new BufferedImage(width + 100, height, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D gr = image.createGraphics();
         gr.setBackground(Color.WHITE);
         gr.fillRect(0, 0, image.getWidth(), image.getHeight());
@@ -41,6 +41,11 @@ public class BoardVis {
                 drawCell(gr, member.x, member.y, 1, true);
             }
             drawCell(gr, transformed.pivot.x, transformed.pivot.y, 2, true);
+        }
+
+        // printing command
+        if( command != null) {
+            gr.drawString(command.toString(),width + 1, 16);
         }
 
         return image;

@@ -66,7 +66,7 @@ public class main {
                 if( saveImages ) {
                     // drawing initial board state
                     BoardVis vis = new BoardVis();
-                    BufferedImage image = vis.draw(board, null, null);
+                    BufferedImage image = vis.draw(board, null, null, null);
                     ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
                 }
 /*

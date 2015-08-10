@@ -87,7 +87,7 @@ public class Solver {
         // creating graph 
         final UnitState spawnState = board.getSpawnState(unit, unitBoard);
 
-        if( saveImages ) drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed);
+        if( saveImages ) drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
 
         // playing random
         Set<UnitState> states = new HashSet<>();
@@ -130,18 +130,30 @@ public class Solver {
         for (int i = nodes.size() - 1; 0 <= i; i--) {
             state = nodes.get(i).state;
             commands.add(nodes.get(i).command);
-            drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed);
+            drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
         }
+
+        // generating lock command
+        boolean lockFound = false;
+        for (Command command : Command.commands) {
+            if( !board.isValid(unit, command.apply(state))) {
+                lockFound = true;
+                commands.add(command);
+                break;
+            }
+        }
+
+        if( !lockFound) throw new RuntimeException("lock command cannot be found!");
 
         // updating the board with locked unit
         board.updateBoard(unit, state);
-        if( saveImages ) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed);
+        if( saveImages ) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed, null);
 
         return Command.encode(commands);
     }
 
-    private void drawFrame(Board board, Unit unit, int currentUnitIndex, UnitState state, int moveIndex, int seed) {
-        final BufferedImage image = BoardVis.draw(board, unit, state);
+    private void drawFrame(Board board, Unit unit, int currentUnitIndex, UnitState state, int moveIndex, int seed, Command command) {
+        final BufferedImage image = BoardVis.draw(board, unit, state, command);
         final String fileNmae = String.format("%s_seed%d_play_u%03d_i%03d.png", path, seed, currentUnitIndex, moveIndex);
         try {
             ImageIO.write(image, "png", new File(fileNmae));
