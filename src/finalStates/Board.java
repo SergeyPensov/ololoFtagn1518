@@ -149,7 +149,8 @@ public class Board {
     public Unit transform(Unit unit, UnitState state) {
 
         // rotating
-        unit = rotate(unit, state.angle);
+        if( (state.angle % 5) != 0 )
+            unit = rotate(unit, state.angle);
 
         Unit result = new Unit();
         result.members = new Point[unit.members.length];

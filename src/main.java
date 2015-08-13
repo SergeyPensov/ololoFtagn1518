@@ -58,6 +58,7 @@ public class main {
         }
 
         for (String inputFileName : inputFileNames) {
+            Timer timer = new Timer();
             try {
                 final String json = readFile(inputFileName);
                 Problem problem = Problem.read(json);
@@ -95,6 +96,7 @@ public class main {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.out.println("Solving for " + new File(inputFileName).getName() + " took " + timer.getTime(false));
         }
 
     }
