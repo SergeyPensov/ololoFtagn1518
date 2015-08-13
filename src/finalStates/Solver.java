@@ -85,7 +85,7 @@ public class Solver {
     private String play(Board board, Unit unit, Board unitBoard, int[] nextUnits, int currentUnitIndex, int seed) {
 
         // creating graph 
-        final UnitState spawnState = board.getSpawnState(unit, unitBoard);
+        final UnitState spawnState = board.getSpawnState(unit);
 
         drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
 

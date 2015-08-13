@@ -43,7 +43,7 @@ public class FindFinalStates {
 
     public ThreeNode getAllPath(OptimalUnitPosition optimalUnitPosition, Unit unit, Board board, Board unitBoard) {
 
-        ThreeNode parent = new ThreeNode(null, null, board.getSpawnState(unit, unitBoard), board, unit);
+        ThreeNode parent = new ThreeNode(null, null, board.getSpawnState(unit), board, unit);
         boolean canCreateChild = false;
         LinkedHashMap<UnitState, ThreeNode> nodeHashMap = new LinkedHashMap<>();
         ArrayList<ThreeNode> nextParent = new ArrayList<>();

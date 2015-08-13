@@ -291,9 +291,23 @@ public class Board {
         return ((addedScore << 4) + lockCounter) * 3 + state.start.y * 2;
     }
 
-    public UnitState getSpawnState(Unit unit, Board unitBoard) {
-        int i = (width - unitBoard.width) / 2;
+    public UnitState getSpawnState(Unit unit) {
+
+        // calc unit width
+        int minX = unit.members[0].x;
+        int maxX = minX;
+        for (Point member : unit.members) {
+            if( member.x > maxX ) maxX = member.x;
+            if( member.x < minX ) minX = member.x;
+        }
+        final int unitWidth = maxX - minX + 1;
+
+        int i = (width - unitWidth) / 2;
         int j = 0;
+
+        if( unit.pivot.x < minX ) {
+            i -= minX - unit.pivot.x;
+        }
 
         return new UnitState(new Point(i, j), 0);
     }
