@@ -116,13 +116,13 @@ public class Board {
     }
 */
 
-    private Unit rotate(Unit unit, int angle) {
+    private Unit rotate(final Unit unit, final int angle) {
 
         Unit result = new Unit();
         result.pivot = unit.pivot;
         result.members = new Point[unit.members.length];
 
-        FPoint fPivot = getCoordsForIndexes(unit.pivot);
+        final FPoint fPivot = getCoordsForIndexes(unit.pivot);
 
         final float alpha = (float) (Math.PI / 3) * angle;
         final float cosA = (float) Math.cos(alpha);
@@ -146,11 +146,10 @@ public class Board {
         return result;
     }
 
-    public Unit transform(Unit unit, UnitState state) {
+    public Unit transform(final Unit origUnit, final UnitState state) {
 
         // rotating
-        if( (state.angle % 5) != 0 )
-            unit = rotate(unit, state.angle);
+        final Unit unit = (state.angle % 6) == 0 ? origUnit : rotate(origUnit, state.angle);
 
         Unit result = new Unit();
         result.members = new Point[unit.members.length];
@@ -188,7 +187,7 @@ public class Board {
         return result;
     }
 
-    public boolean isValid(Unit unit, UnitState state) {
+    public boolean isValid(final Unit unit, final UnitState state) {
         final Unit transformed = transform(unit, state);
         for (Point member : transformed.members) {
             final int i = member.x;
@@ -198,7 +197,7 @@ public class Board {
         return true;
     }
 
-    public int updateBoard(Unit unit, UnitState state) {
+    public int updateBoard(final Unit unit, final UnitState state) {
         final Unit transformed = transform(unit, state);
         for (Point member : transformed.members) {
             final int i = member.x;

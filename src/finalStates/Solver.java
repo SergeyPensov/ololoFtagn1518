@@ -37,9 +37,8 @@ public class Solver {
         for (int f = 0; f < unitsForTheGame.length; ++f) {
             final int unitIndex = unitsForTheGame[f];
             final Unit unit = problem.units[unitIndex];
-            final Board unitBoard = problem.unitBoards[unitIndex];
             final int[] nextUnits = Arrays.copyOfRange(unitsForTheGame, f + 1, unitsForTheGame.length);
-            final String sequence = play(board, unit, unitBoard, nextUnits, f, seed);
+            final String sequence = play(board, unit, nextUnits, f, seed);
             if (sequence == null) break; // GAME OVER
             sb.append(sequence);
         }
@@ -82,7 +81,7 @@ public class Solver {
         return null;
     }
 
-    private String play(Board board, Unit unit, Board unitBoard, int[] nextUnits, int currentUnitIndex, int seed) {
+    private String play(Board board, Unit unit, int[] nextUnits, int currentUnitIndex, int seed) {
 
         // creating graph 
         final UnitState spawnState = board.getSpawnState(unit);
@@ -96,26 +95,30 @@ public class Solver {
         boolean live = board.isValid(unit, spawnState);
         if (!live) return null; // GAME OVER - spawn location is not valid
 
-        List<Command> commands = new ArrayList<>(100);
-
         UnitState state = spawnState;
         int moveIndex = 1;
         Unit[] nextUnitsRefs = null;
         if (nextUnits.length != 0) nextUnitsRefs = new Unit[]{problem.units[nextUnits[0]]};
 
+        // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(unit, board, nextUnitsRefs);
         ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap();
+        System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size());
+
+        // searching for paths that connects spawn position with locked position
         ThreeNode threeNode = null;
         for (OptimalUnitPosition optimalUnitPosition : optimalUnitPositions) {
-            threeNode = findFinalStates.getAllPath(optimalUnitPosition, unit, board, unitBoard);
+            threeNode = findFinalStates.getAllPath(optimalUnitPosition, unit, board);
             if (threeNode != null) {
                 break;
             }
-
         }
+
         if (threeNode == null) return Command.encode(new LinkedList<>());
         ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
-        System.out.println(nodes.size());
+        System.out.println("Moves for unit #" + currentUnitIndex + "=" + nodes.size());
+
+        List<Command> commands = new ArrayList<>(100);
         for (int i = nodes.size() - 1; 0 <= i; i--) {
             state = nodes.get(i).state;
 
@@ -138,7 +141,7 @@ public class Solver {
         // updating the board with locked unit
         board.updateBoard(unit, state);
         if (saveImages) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed, null);
-        System.out.println("I'm work");
+//        System.out.println("I'm work");
         return Command.encode(commands);
     }
 

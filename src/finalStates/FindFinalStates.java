@@ -19,19 +19,18 @@ public class FindFinalStates {
         for (int j = 0; j < board.height; j++) {
             for (int i = 0; i < board.width; i++) {
                 for (int a = 0; a < 5; ++a) {
-                    Point testPoint = new Point(i, board.height - j - 1);
-                    UnitState testState = new UnitState(testPoint, a);
+                    final Point testPoint = new Point(i, board.height - j - 1);
+                    final UnitState testState = new UnitState(testPoint, a);
                     if (board.isValid(unit, testState)) {
                         int lockCounter = 0;
                         for (int k = 0; k < Command.commands.length; k++) {
-                            UnitState state = testState.applyCommand(Command.getCommand(k));
-                            if (!board.isValid(unit, state)) {
+                            if (!board.isValid(unit, testState.applyCommand(Command.getCommand(k)))) {
                                 lockCounter++;
                             }
                         }
                         if (lockCounter != 0) {
                             int score = board.getPositionScore(unit, testState, lockCounter);
-                            optimalUnitPositions.add(new OptimalUnitPosition(new UnitState(testState), score));
+                            optimalUnitPositions.add(new OptimalUnitPosition(testState, score));
                         }
                     }
                 }
@@ -41,7 +40,7 @@ public class FindFinalStates {
         return optimalUnitPositions;
     }
 
-    public ThreeNode getAllPath(OptimalUnitPosition optimalUnitPosition, Unit unit, Board board, Board unitBoard) {
+    public ThreeNode getAllPath(OptimalUnitPosition optimalUnitPosition, Unit unit, Board board) {
 
         ThreeNode parent = new ThreeNode(null, null, board.getSpawnState(unit), board, unit);
         boolean canCreateChild = false;
