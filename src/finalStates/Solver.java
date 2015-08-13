@@ -49,38 +49,6 @@ public class Solver {
         return new SolverResult(problem.id, seed, "", solution);
     }
 
-    private Command findDirection(Board board, Unit unit, UnitState startState, UnitState endState, int depth, Set<UnitState> visitedStates) {
-
-        if (startState.equals(endState)) {
-            // locking
-            for (Command command : Command.commands) {
-                if (!board.isValid(unit, command.apply(startState))) {
-                    return command;
-                }
-            }
-
-        }
-
-        for (Command com : Command.commands) {
-            if (com.apply(startState).equals(endState)) {
-                return com;
-            }
-        }
-
-        if (depth == 0) return null;
-
-        for (Command com : Command.commands) {
-            final UnitState nextState = com.apply(startState);
-            if (visitedStates.contains(nextState) == false && board.isValid(unit, nextState)) {
-                if (null != findDirection(board, unit, nextState, endState, depth - 1, visitedStates)) {
-                    return com;
-                }
-            }
-        }
-
-        return null;
-    }
-
     private String play(Board board, Unit unit, int[] nextUnits, int currentUnitIndex, int seed) {
 
         // creating graph 
@@ -97,12 +65,12 @@ public class Solver {
 
         UnitState state = spawnState;
         int moveIndex = 1;
-        Unit[] nextUnitsRefs = null;
-        if (nextUnits.length != 0) nextUnitsRefs = new Unit[]{problem.units[nextUnits[0]]};
+        Unit[] nextUnitsRefs = new Unit[nextUnits.length];
+        for( int i=0; i<nextUnits.length; ++i) nextUnitsRefs[i] = problem.units[nextUnits[0]];
 
         // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(unit, board, nextUnitsRefs);
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap();
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(2);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size());
 
         // searching for paths that connects spawn position with locked position
@@ -110,6 +78,7 @@ public class Solver {
         for (OptimalUnitPosition optimalUnitPosition : optimalUnitPositions) {
             threeNode = findFinalStates.getAllPath(optimalUnitPosition, unit, board);
             if (threeNode != null) {
+                System.out.println("using position scored " + optimalUnitPosition.score);
                 break;
             }
         }
@@ -141,7 +110,6 @@ public class Solver {
         // updating the board with locked unit
         board.updateBoard(unit, state);
         if (saveImages) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed, null);
-//        System.out.println("I'm work");
         return Command.encode(commands);
     }
 

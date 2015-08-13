@@ -257,7 +257,7 @@ public class Board {
 
         int linesKilled = 0;
         for (Point member : transformed.members) {
-            if (checkedY.contains(member.y) == false) {
+            if (!checkedY.contains(member.y)) {
                 checkedY.add(member.y);
 
                 boolean filled = true;
@@ -288,7 +288,7 @@ public class Board {
 
         final int addedScore = points + bonus;
 
-        return ((addedScore << 4) + lockCounter) * 3 + state.start.y * 2;
+        return ((addedScore << 8) + lockCounter) * 3 + state.start.y * 2;
     }
 
     public UnitState getSpawnState(Unit unit) {

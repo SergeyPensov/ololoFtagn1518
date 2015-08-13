@@ -8,16 +8,18 @@ import java.util.*;
 public class FindFinalStates {
     private final Board board;
     private final Unit unit;
+    private Unit[] nextUnits;
 
     public FindFinalStates(Unit unit, Board board, Unit[] nextUnits) {
         this.board = board;
         this.unit = unit;
+        this.nextUnits = nextUnits;
     }
 
-    public ArrayList<OptimalUnitPosition> getOptimalPositionInMap() {
+    public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth) {
         ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>();
         for (int j = 0; j < board.height; j++) {
-            for (int i = 0; i < board.width; i++) {
+            for (int i = -3; i < board.width+3; i++) {
                 for (int a = 0; a < 5; ++a) {
                     final Point testPoint = new Point(i, board.height - j - 1);
                     final UnitState testState = new UnitState(testPoint, a);
@@ -28,14 +30,27 @@ public class FindFinalStates {
                                 lockCounter++;
                             }
                         }
+
                         if (lockCounter != 0) {
                             int score = board.getPositionScore(unit, testState, lockCounter);
+
+                            if( depth > 0 && nextUnits != null && nextUnits.length != 0) {
+                                Board newBoard = new Board(board);
+                                newBoard.updateBoard(unit, testState);
+
+                                final Unit[] nextNextUnits = nextUnits.length > 1 ? Arrays.copyOfRange(nextUnits, 1, nextUnits.length) : null;
+                                FindFinalStates newFFS = new FindFinalStates(nextUnits[0], newBoard, nextNextUnits);
+                                final ArrayList<OptimalUnitPosition> newOptimalPoss = newFFS.getOptimalPositionInMap(depth - 1);
+                                score += newOptimalPoss.get(0).score;
+                            }
+
                             optimalUnitPositions.add(new OptimalUnitPosition(testState, score));
                         }
                     }
                 }
             }
         }
+
         Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
         return optimalUnitPositions;
     }
