@@ -5,7 +5,7 @@ package finalStates;
  */
 public class OptimalUnitPosition {
     public final UnitState state;
-    public final int score;
+    public int score;
 
     public OptimalUnitPosition(UnitState state, int score) {
         this.state = state;

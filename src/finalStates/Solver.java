@@ -70,7 +70,7 @@ public class Solver {
 
         // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(unit, board, nextUnitsRefs);
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(2);
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(5);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size());
 
         // searching for paths that connects spawn position with locked position
@@ -83,7 +83,10 @@ public class Solver {
             }
         }
 
-        if (threeNode == null) return Command.encode(new LinkedList<>());
+        if (threeNode == null) {
+            System.out.println("path not found");
+            return null;
+        }
         ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
         System.out.println("Moves for unit #" + currentUnitIndex + "=" + nodes.size());
 
@@ -92,7 +95,7 @@ public class Solver {
             state = nodes.get(i).state;
 
             commands.add(nodes.get(i).command);
-            if (saveImages)  drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
+//            if (saveImages)  drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
         }
 
         // generating lock command
