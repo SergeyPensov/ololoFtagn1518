@@ -70,7 +70,7 @@ public class Solver {
 
         // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex, null);
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(2, -1, 1, 2);
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(4, 8, 1, 2);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size()
         + ", line kills fulfulled=" + findFinalStates.isKilledLinesFulfilled());
 
