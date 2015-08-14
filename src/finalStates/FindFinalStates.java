@@ -28,6 +28,7 @@ public class FindFinalStates {
                         for (int k = 0; k < Command.commands.length; k++) {
                             if (!board.isValid(unit, testState.applyCommand(Command.getCommand(k)))) {
                                 lockCounter++;
+                                break;
                             }
                         }
 
@@ -44,7 +45,7 @@ public class FindFinalStates {
 
         if( depth > 0 && nextUnits != null && nextUnits.length != 0) {
 
-            final int countOfBestPositions = Math.min(7, optimalUnitPositions.size());
+            final int countOfBestPositions = Math.min(20, optimalUnitPositions.size());
 
             for( int i=0; i<countOfBestPositions; ++i) {
                 OptimalUnitPosition position = optimalUnitPositions.get(i);

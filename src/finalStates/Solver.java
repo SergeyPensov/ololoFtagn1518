@@ -70,7 +70,7 @@ public class Solver {
 
         // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(unit, board, nextUnitsRefs);
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(5);
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(3);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size());
 
         // searching for paths that connects spawn position with locked position

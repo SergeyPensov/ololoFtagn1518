@@ -18,6 +18,8 @@ public class Board {
     public int score = 0;
     private int oldLinesKilled = 0;
 
+    private Set<Integer> checkedY = new HashSet<>(10);
+
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
@@ -253,21 +255,20 @@ public class Board {
             setCell(i, j, CellState.FILLED.getState());
         }
 
-        Set<Integer> checkedY = new HashSet<>(unit.members.length);
+        checkedY.clear();
 
         int linesKilled = 0;
+        int totalFilledX = 0;
         for (Point member : transformed.members) {
             if (!checkedY.contains(member.y)) {
                 checkedY.add(member.y);
 
-                boolean filled = true;
+                int filledX = 0;
                 for (int x = 0; x < width; ++x) {
-                    if (readCell(x, member.y) == 0) {
-                        filled = false;
-                        break;
-                    }
+                    if (readCell(x, member.y) != 0) ++filledX;
                 }
-                if (filled) linesKilled++;
+                if (filledX == width ) linesKilled++;
+                totalFilledX += filledX;
             }
         }
 
@@ -288,7 +289,7 @@ public class Board {
 
         final int addedScore = points + bonus;
 
-        return ((addedScore << 8) + lockCounter) * 3 + state.start.y * 2;
+        return ((addedScore * 100) + lockCounter) * 3 + state.start.y + totalFilledX;
     }
 
     public UnitState getSpawnState(Unit unit) {
