@@ -11,6 +11,7 @@ public class FindFinalStates {
     private final int currentUnitIndex;
     private final int[] angles;
     private int maxAddedScore = 0;
+    private int maxKilledLines = 0;
 
     public FindFinalStates(Board board, Unit[] units, int currentUnitIndex) {
         this.board = board;
@@ -21,7 +22,7 @@ public class FindFinalStates {
 
     public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth, int countOfPositionsLimit, int linesKilled) {
         ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>(230);
-        int maxKilledLines = 0;
+        maxKilledLines = 0;
         maxAddedScore = 0;
         final Unit unit = units[currentUnitIndex];
         for (int j = 0; j < board.height; j++) {
@@ -50,7 +51,7 @@ public class FindFinalStates {
                             }
 
                             optimalUnitPositions.add(new OptimalUnitPosition(testState, posScore,
-                                        posScore.depth + posScore.totalFilledX + posScore.addedScore/5));
+                                        posScore.depth*2 + posScore.totalFilledX + posScore.addedScore/5));
                         }
                     }
                 }
@@ -61,13 +62,12 @@ public class FindFinalStates {
 
         if( maxKilledLines >= linesKilled ) {
             // goal fulfilled
-            Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
             return optimalUnitPositions;
         }
 
-        Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
-
         if( depth > 0 && currentUnitIndex < units.length-1) {
+
+            Collections.sort(optimalUnitPositions, (o1, o2) -> o2.posScore.addedScore - o1.posScore.addedScore);
 
             final int countOfBestPositions = countOfPositionsLimit < 0 ?
                     optimalUnitPositions.size() :
@@ -82,12 +82,16 @@ public class FindFinalStates {
                 newBoard.updateBoard(unit, position.state);
 
                 FindFinalStates newFFS = new FindFinalStates(newBoard, units, currentUnitIndex+1);
-                newFFS.getOptimalPositionInMap(depth - 1, 10, linesKilled - maxKilledLines);
+                newFFS.getOptimalPositionInMap(depth - 1, 15, linesKilled - maxKilledLines);
 
                 position.posScore.addedScore += newFFS.maxAddedScore;
+
+                if( newFFS.maxKilledLines >= linesKilled - maxKilledLines) {
+                    // goal fulfulled
+                    break;
+                }
             }
 
-            Collections.sort(optimalUnitPositions, (o1, o2) -> o2.posScore.addedScore - o1.posScore.addedScore);
         }
 
         return optimalUnitPositions;

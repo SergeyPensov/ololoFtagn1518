@@ -28,17 +28,23 @@ public class Solver {
 
         System.out.println("Solving for seed " + seed);
 
-        final int[] unitsForTheGame = problem.getUnitsForTheGame(seed);
 
         StringBuilder sb = new StringBuilder(1024);
 
         Board board = problem.getBoard();
 
+        // creating all units
+        final int[] unitsForTheGame = problem.getUnitsForTheGame(seed);
+        final Unit[] allUnits = new Unit[unitsForTheGame.length];
+        int index =0;
+        for( int i: unitsForTheGame) {
+            allUnits[index] = problem.units[i];
+            ++index;
+        }
+
         for (int f = 0; f < unitsForTheGame.length; ++f) {
             final int unitIndex = unitsForTheGame[f];
-            final Unit unit = problem.units[unitIndex];
-            final int[] nextUnits = Arrays.copyOfRange(unitsForTheGame, f + 1, unitsForTheGame.length);
-            final String sequence = play(board, unit, nextUnits, f, seed);
+            final String sequence = play(board, allUnits, f, seed);
             if (sequence == null) break; // GAME OVER
             sb.append(sequence);
         }
@@ -49,9 +55,9 @@ public class Solver {
         return new SolverResult(problem.id, seed, "", solution);
     }
 
-    private String play(Board board, Unit unit, int[] nextUnits, int currentUnitIndex, int seed) {
+    private String play(Board board, Unit[] units, int currentUnitIndex, int seed) {
 
-        // creating graph 
+        final Unit unit = units[currentUnitIndex];
         final UnitState spawnState = board.getSpawnState(unit);
 
         drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
@@ -67,16 +73,20 @@ public class Solver {
         int moveIndex = 1;
 
         // searching for all "locked" states for the unit
-        FindFinalStates findFinalStates = new FindFinalStates(board, problem.units, 0);
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(5, -1, 1);
+        FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex);
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(4, -1, 1);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size());
+
+        // sorting on combined criterion
+        Collections.sort(optimalUnitPositions, (o1, o2) -> (o2.score+o2.posScore.addedScore*2) - (o1.score+o1.posScore.addedScore*2));
+
 
         // searching for paths that connects spawn position with locked position
         ThreeNode threeNode = null;
         for (OptimalUnitPosition optimalUnitPosition : optimalUnitPositions) {
             threeNode = findFinalStates.getAllPath(optimalUnitPosition, unit, board);
             if (threeNode != null) {
-                System.out.println("using position scored " + optimalUnitPosition.score);
+                System.out.println("using position scored " + optimalUnitPosition.score + ", max added score=" + optimalUnitPosition.posScore.addedScore);
                 break;
             }
         }
