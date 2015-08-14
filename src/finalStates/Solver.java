@@ -24,7 +24,7 @@ public class Solver {
         this.saveImages = saveImages;
     }
 
-    public SolverResult solve(int seed) {
+    public SolverResult solve(int seed) throws Exception {
 
         System.out.println("Solving for seed " + seed);
 
@@ -55,16 +55,12 @@ public class Solver {
         return new SolverResult(problem.id, seed, "", solution);
     }
 
-    private String play(Board board, Unit[] units, int currentUnitIndex, int seed) {
+    private String play(Board board, Unit[] units, int currentUnitIndex, int seed) throws Exception {
 
         final Unit unit = units[currentUnitIndex];
         final UnitState spawnState = board.getSpawnState(unit);
 
         drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
-
-        // playing random
-        Set<UnitState> states = new HashSet<>();
-        states.add(spawnState);
 
         boolean live = board.isValid(unit, spawnState);
         if (!live) return null; // GAME OVER - spawn location is not valid
@@ -73,9 +69,10 @@ public class Solver {
         int moveIndex = 1;
 
         // searching for all "locked" states for the unit
-        FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex);
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(4, -1, 1);
-        System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size());
+        FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex, null);
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(2, -1, 1, 2);
+        System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size()
+        + ", line kills fulfulled=" + findFinalStates.isKilledLinesFulfilled());
 
         // sorting on combined criterion
         Collections.sort(optimalUnitPositions, (o1, o2) -> (o2.score+o2.posScore.addedScore*2) - (o1.score+o1.posScore.addedScore*2));
@@ -138,7 +135,7 @@ public class Solver {
         }
     }
 
-    public SolverResult[] solveAll(int[] seeds) {
+    public SolverResult[] solveAll(int[] seeds) throws Exception {
         SolverResult[] result = new SolverResult[seeds.length];
         for (int i = 0; i < seeds.length; ++i) {
             result[i] = solve(seeds[i]);
@@ -146,7 +143,7 @@ public class Solver {
         return result;
     }
 
-    public SolverResult[] solveAll() {
+    public SolverResult[] solveAll() throws Exception {
         return solveAll(problem.sourceSeeds);
     }
 }

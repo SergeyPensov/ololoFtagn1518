@@ -93,7 +93,7 @@ public class main {
                 final String submit = formatSubmitScript(resultJsonFile);
                 saveFile(inputFileName + "_result_submit.bat", submit);
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             System.out.println("Solving for " + new File(inputFileName).getName() + " took " + timer.getTime(false));

@@ -1,6 +1,7 @@
 package finalStates;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * @Author Sergey Pensov
@@ -12,15 +13,18 @@ public class FindFinalStates {
     private final int[] angles;
     private int maxAddedScore = 0;
     private int maxKilledLines = 0;
+    private boolean killedLinesFulfilled = false;
+    private OptimalUnitPosition startPosition;
 
-    public FindFinalStates(Board board, Unit[] units, int currentUnitIndex) {
+    public FindFinalStates(Board board, Unit[] units, int currentUnitIndex, OptimalUnitPosition startPosition) {
         this.board = board;
         this.units = units;
         this.currentUnitIndex = currentUnitIndex;
+        this.startPosition = startPosition;
         angles = Board.getAngles(units[currentUnitIndex]);
     }
 
-    public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth, int countOfPositionsLimit, int linesKilled) {
+    public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth, int countOfPositionsLimit, int linesKilled, int threadCount) throws Exception {
         ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>(230);
         maxKilledLines = 0;
         maxAddedScore = 0;
@@ -62,18 +66,72 @@ public class FindFinalStates {
 
         if( maxKilledLines >= linesKilled ) {
             // goal fulfilled
+            killedLinesFulfilled = true;
             return optimalUnitPositions;
         }
 
         if( depth > 0 && currentUnitIndex < units.length-1) {
 
-            Collections.sort(optimalUnitPositions, (o1, o2) -> o2.posScore.addedScore - o1.posScore.addedScore);
+            Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
 
             final int countOfBestPositions = countOfPositionsLimit < 0 ?
                     optimalUnitPositions.size() :
                     Math.min(countOfPositionsLimit, optimalUnitPositions.size());
 
+            ExecutorService threadPool = threadCount > 1 ? Executors.newFixedThreadPool(threadCount) : null;
+
+            List<Future<FindFinalStates>> threadResults = new ArrayList<>();
+
             final int bestScore = optimalUnitPositions.get(0).score;
+            for( int i=0; i<countOfBestPositions; ++i) {
+                OptimalUnitPosition position = optimalUnitPositions.get(i);
+                if (position.score * 3 < bestScore) break;
+
+                Callable<FindFinalStates> task = new Callable<FindFinalStates>() {
+                    @Override
+                    public FindFinalStates call() {
+                        Board newBoard = new Board(board);
+                        newBoard.updateBoard(unit, position.state);
+
+                        FindFinalStates newFFS = new FindFinalStates(newBoard, units, currentUnitIndex + 1, position);
+                        try {
+                            newFFS.getOptimalPositionInMap(depth - 1, 15, linesKilled - maxKilledLines, 1);
+                        } catch (Exception ignored) {
+                        }
+                        return newFFS;
+                    }
+                };
+                if( threadPool != null) {
+                    Future<FindFinalStates> f = threadPool.submit(task);
+                    threadResults.add(f);
+                }
+                else {
+                    FindFinalStates ff = task.call();
+                    if( ff.killedLinesFulfilled) killedLinesFulfilled = true;
+                    position.posScore.addedScore += ff.maxAddedScore;
+                    if( killedLinesFulfilled ) break;
+                }
+
+            }
+
+            if( threadPool != null) {
+                threadPool.shutdown();
+                while (!threadPool.awaitTermination(20, TimeUnit.SECONDS)) {
+                    System.out.println("still executing");
+                }
+
+                // checking thread results
+                for (Future<FindFinalStates> threadResult : threadResults) {
+                    FindFinalStates ff = threadResult.get();
+                    if (ff != null) {
+                        ff.startPosition.posScore.addedScore += ff.maxAddedScore;
+                        if( ff.killedLinesFulfilled) killedLinesFulfilled = true;
+                    }
+                }
+            }
+
+/*
+
             for( int i=0; i<countOfBestPositions; ++i) {
                 OptimalUnitPosition position = optimalUnitPositions.get(i);
                 if( position.score * 3 < bestScore ) break;
@@ -81,8 +139,8 @@ public class FindFinalStates {
                 Board newBoard = new Board(board);
                 newBoard.updateBoard(unit, position.state);
 
-                FindFinalStates newFFS = new FindFinalStates(newBoard, units, currentUnitIndex+1);
-                newFFS.getOptimalPositionInMap(depth - 1, 15, linesKilled - maxKilledLines);
+                FindFinalStates newFFS = new FindFinalStates(newBoard, units, currentUnitIndex+1, startPosition);
+                newFFS.getOptimalPositionInMap(depth - 1, 15, linesKilled - maxKilledLines, threadCount);
 
                 position.posScore.addedScore += newFFS.maxAddedScore;
 
@@ -91,6 +149,7 @@ public class FindFinalStates {
                     break;
                 }
             }
+*/
 
         }
 
@@ -125,6 +184,10 @@ public class FindFinalStates {
         }
         if (parent.finalState != false) return parent;
         return null;
+    }
+
+    public boolean isKilledLinesFulfilled() {
+        return killedLinesFulfilled;
     }
 
     public static ArrayList<ThreeNode> getShortPath(ThreeNode node) {
