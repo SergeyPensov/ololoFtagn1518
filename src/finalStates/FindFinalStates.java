@@ -9,18 +9,20 @@ public class FindFinalStates {
     private final Board board;
     private final Unit unit;
     private Unit[] nextUnits;
+    private final int[] angles;
 
     public FindFinalStates(Unit unit, Board board, Unit[] nextUnits) {
         this.board = board;
         this.unit = unit;
         this.nextUnits = nextUnits;
+        angles = Board.getAngles(unit);
     }
 
     public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth) {
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>();
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>(30);
         for (int j = 0; j < board.height; j++) {
             for (int i = -3; i < board.width+3; i++) {
-                for (int a = 0; a < 5; ++a) {
+                for (int a : angles) {
                     final Point testPoint = new Point(i, board.height - j - 1);
                     final UnitState testState = new UnitState(testPoint, a);
                     if (board.isValid(unit, testState)) {

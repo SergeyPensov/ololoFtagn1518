@@ -85,38 +85,14 @@ public class Board {
         if (i < 0 || i >= width || j < 0 || j >= height) throw new IllegalArgumentException("indexes out of bounds");
         return i + j * width;
     }
-/*
-    private Unit rotate(Unit unit, int angle) {
 
-        Unit result = new Unit();
-        result.pivot = unit.pivot;
-        result.members = new Point[unit.members.length];
+    private final static float[] cosATable = new float[]
+    { (float)Math.cos(Math.PI*0/3), (float)Math.cos(Math.PI*1/3), (float)Math.cos(Math.PI*2/3),
+      (float)Math.cos(Math.PI*3/3), (float)Math.cos(Math.PI*4/3), (float)Math.cos(Math.PI*5/3)};
 
-        float pivot_x_d = (float) (unit.pivot.x + (unit.pivot.y % 2 == 0 ? 0 : 0.5));
-        float pivot_y_d = (float) (unit.pivot.y * Math.sqrt(3) / 2);
-
-        final float alpha = (float) (Math.PI / 3) * angle;
-
-        for (int i = 0; i < unit.members.length; i++) {
-            float hex_x_d = (float) (unit.members[i].x + ((unit.members[i].y % 2 == 0) ? 0 : 0.5));
-            float hex_y_d = (float) (unit.members[i].y * Math.sqrt(3) / 2);
-
-            float rlx = hex_x_d - pivot_x_d;
-            float rly = hex_y_d - pivot_y_d;
-            float rl2x = (float) (rlx * Math.cos(alpha) - rly * Math.sin(alpha));
-            float rl2y = (float) (rlx * Math.sin(alpha) + rly * Math.cos(alpha));
-            rl2x += pivot_x_d;
-            rl2y += pivot_y_d;
-
-            float hex_y2 = (float) (2 * rl2y / Math.sqrt(3));
-            float hex_x2 = (float) (rl2x - ((hex_y2 % 2) == 0 ? 0 : 0.5));
-
-            result.members[i] = new Point(Math.round(hex_x2), Math.round(hex_y2));
-        }
-
-        return result;
-    }
-*/
+    private final static float[] sinATable = new float[]
+    { (float)Math.sin(Math.PI*0/3), (float)Math.sin(Math.PI*1/3), (float)Math.sin(Math.PI*2/3),
+      (float)Math.sin(Math.PI*3/3), (float)Math.sin(Math.PI*4/3), (float)Math.sin(Math.PI*5/3)};
 
     private Unit rotate(final Unit unit, final int angle) {
 
@@ -126,9 +102,8 @@ public class Board {
 
         final FPoint fPivot = getCoordsForIndexes(unit.pivot);
 
-        final float alpha = (float) (Math.PI / 3) * angle;
-        final float cosA = (float) Math.cos(alpha);
-        final float sinA = (float) Math.sin(alpha);
+        final float cosA = cosATable[angle%6];
+        final float sinA = sinATable[angle%6];
 
         for (int i = 0; i < unit.members.length; i++) {
 
@@ -289,7 +264,7 @@ public class Board {
 
         final int addedScore = points + bonus;
 
-        return ((addedScore * 100) + lockCounter) * 3 + state.start.y + totalFilledX;
+        return ((addedScore * 100) + lockCounter) * 10 + totalFilledX * 2 + state.start.y;
     }
 
     public UnitState getSpawnState(Unit unit) {
@@ -312,4 +287,12 @@ public class Board {
 
         return new UnitState(new Point(i, j), 0);
     }
+
+    public static int[] getAngles(Unit unit) {
+        if( unit.members.length == 1 && unit.members[0].equals(unit.pivot)) return new int[]{0};
+
+        return new int[]{0,1,2,3,4,5};
+    }
+
+
 }
