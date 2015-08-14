@@ -65,12 +65,10 @@ public class Solver {
 
         UnitState state = spawnState;
         int moveIndex = 1;
-        Unit[] nextUnitsRefs = new Unit[nextUnits.length];
-        for( int i=0; i<nextUnits.length; ++i) nextUnitsRefs[i] = problem.units[nextUnits[0]];
 
         // searching for all "locked" states for the unit
-        FindFinalStates findFinalStates = new FindFinalStates(unit, board, nextUnitsRefs);
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(3);
+        FindFinalStates findFinalStates = new FindFinalStates(board, problem.units, 0);
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(5, -1, 1);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size());
 
         // searching for paths that connects spawn position with locked position
@@ -112,6 +110,7 @@ public class Solver {
 
         // updating the board with locked unit
         board.updateBoard(unit, state);
+        System.out.println("score = " + board.score);
         if (saveImages) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed, null);
         return Command.encode(commands);
     }

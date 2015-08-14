@@ -91,8 +91,8 @@ public class Board {
       (float)Math.cos(Math.PI*3/3), (float)Math.cos(Math.PI*4/3), (float)Math.cos(Math.PI*5/3)};
 
     private final static float[] sinATable = new float[]
-    { (float)Math.sin(Math.PI*0/3), (float)Math.sin(Math.PI*1/3), (float)Math.sin(Math.PI*2/3),
-      (float)Math.sin(Math.PI*3/3), (float)Math.sin(Math.PI*4/3), (float)Math.sin(Math.PI*5/3)};
+    { (float)Math.sin(Math.PI * 0 / 3), (float)Math.sin(Math.PI * 1 / 3), (float)Math.sin(Math.PI * 2 / 3),
+      (float)Math.sin(Math.PI * 3 / 3), (float)Math.sin(Math.PI * 4 / 3), (float)Math.sin(Math.PI * 5 / 3)};
 
     private Unit rotate(final Unit unit, final int angle) {
 
@@ -221,7 +221,30 @@ public class Board {
         return addedScore;
     }
 
-    public int getPositionScore(Unit unit, UnitState state, int lockCounter) {
+    public static class PosScore {
+        int addedScore;
+        final int totalFilledX;
+        final int depth;
+        final int linesKilled;
+
+        public PosScore(int addedScore, int totalFilledX, int depth, int linesKilled) {
+            this.addedScore = addedScore;
+            this.totalFilledX = totalFilledX;
+            this.depth = depth;
+            this.linesKilled = linesKilled;
+        }
+
+        @Override
+        public String toString() {
+            return "PosScore{" +
+                    "addedScore=" + addedScore +
+                    ", totalFilledX=" + totalFilledX +
+                    ", depth=" + depth +
+                    '}';
+        }
+    }
+
+    public PosScore getPositionScore(Unit unit, UnitState state) {
 
         final Unit transformed = transform(unit, state);
         for (Point member : transformed.members) {
@@ -234,6 +257,7 @@ public class Board {
 
         int linesKilled = 0;
         int totalFilledX = 0;
+        int depth = 0;
         for (Point member : transformed.members) {
             if (!checkedY.contains(member.y)) {
                 checkedY.add(member.y);
@@ -244,8 +268,10 @@ public class Board {
                 }
                 if (filledX == width ) linesKilled++;
                 totalFilledX += filledX;
+                depth += member.y;
             }
         }
+        depth /= checkedY.size();
 
         // cleaning
         for (Point member : transformed.members) {
@@ -264,7 +290,7 @@ public class Board {
 
         final int addedScore = points + bonus;
 
-        return ((addedScore * 100) + lockCounter) * 10 + totalFilledX * 2 + state.start.y;
+        return new PosScore( addedScore, totalFilledX, depth, linesKilled);
     }
 
     public UnitState getSpawnState(Unit unit) {
@@ -295,4 +321,19 @@ public class Board {
     }
 
 
+    public int[] getMinMaxPivotX(Unit unit) {
+
+        // calc unit width
+        int minX = unit.members[0].x;
+        int maxX = minX;
+        for (Point member : unit.members) {
+            if( member.x > maxX ) maxX = member.x;
+            if( member.x < minX ) minX = member.x;
+        }
+
+        int minPivotX = unit.pivot.x - minX;
+        int maxPivotX = width;
+
+        return new int[]{minPivotX, maxPivotX};
+    }
 }
