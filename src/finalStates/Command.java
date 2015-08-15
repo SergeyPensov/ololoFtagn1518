@@ -12,14 +12,16 @@ import java.util.Set;
  */
 public abstract class Command {
     public abstract String letters();
+
     public abstract UnitState apply(UnitState s);
 
     private Set<Character> lettersSet = null;
+
     public boolean has(char c) {
-        if( null == lettersSet) {
+        if (null == lettersSet) {
             final String let = letters();
             lettersSet = new HashSet<>(let.length());
-            for( int i=0; i<let.length(); ++i) {
+            for (int i = 0; i < let.length(); ++i) {
                 lettersSet.add(let.charAt(i));
             }
         }
@@ -33,7 +35,7 @@ public abstract class Command {
     public static final Command C_CW = new CW();
     public static final Command C_CCW = new CCW();
 
-    public static Command[] commands = {C_LEFT, C_RIGHT, C_SW, C_SE, C_CW, C_CCW };
+    public static Command[] commands = {C_LEFT, C_RIGHT, C_SW, C_SE, C_CW, C_CCW};
 
     public static Command getCommand(int index) {
         return commands[index];
@@ -41,9 +43,8 @@ public abstract class Command {
 
     public static String encode(List<Command> list) {
         StringBuilder sb = new StringBuilder(list.size());
-//        ArrayList<String> combination = showAllWords(list);
 
-        for( int startCommand = 0; startCommand < list.size(); ) {
+        for (int startCommand = 0; startCommand < list.size(); ) {
 
             String foundPhrase = null;
             for (String magicWord : magicWords) {
@@ -80,43 +81,16 @@ public abstract class Command {
             }
         }
 
-//        for (Command command : list) {
-//            sb.append(command.letters().charAt(0));
-//        }
-
         return sb.toString();
     }
 
-//    public static ArrayList<String> showAllWords(List<Command> list) {
-//        int position = 0;
-//        ArrayList<String> combination = new ArrayList<>();
-//        if (list.size() == 0) return "";
-//        Command command = list.remove(0);
-//        while (commands != null) {
-//
-//            ArrayList<String> nextCombinations = showAllWords(new ArrayList<Command>(list));
-//            for (int i = 0; i < command.letters().length(); i++) {
-//                for (String nextCombination : nextCombinations) {
-//                    combination.add(command.letters().charAt(i) + nextCombination);
-//                }
-//
-//            }
-//            command = list.remove(0);
-//        }
-//        if (combination.size() > 0) System.out.println(combination.toString());
-//        return combination;
-//    }
-//
-//    public static char getNexChar(Command command, int position) {
-//        return command.letters().charAt(position);
-//    }
-
     public static final String[] magicWords =
-       {"ei!", "Ia! Ia!!", "R'lyeh", "Yuggoth", "Tsathoggua", "YogSothoth",
-        "Necronomicon", "vigintillion", "Cthulhu fhtagn!",
-               "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn.",
-               "In his house at R'lyeh dead Cthulhu waits dreaming.",
-               "The Laundry", "Planet 10", "Yoyodyne", "monkeyboy",
-               "John Bigboote", "BLUE HADES", "CASE NIGHTMARE GREEN"
-       };
+            {
+                    "Ei!", "Ia! Ia!!", "R'lyeh", "Yuggoth", "Tsathoggua", "YogSothoth",
+                    "Necronomicon", "vigintillion", "Cthulhu fhtagn!",
+                    "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn.",
+                    "In his house at R'lyeh dead Cthulhu waits dreaming.",
+                    "The Laundry", "Planet 10", "Yoyodyne", "monkeyboy",
+                    "John Bigboote", "BLUE HADES", "CASE NIGHTMARE GREEN"
+            };
 }
