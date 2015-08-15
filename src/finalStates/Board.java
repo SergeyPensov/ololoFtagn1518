@@ -314,13 +314,6 @@ public class Board {
         return new UnitState(new Point(i, j), 0);
     }
 
-    public static int[] getAngles(Unit unit) {
-        if( unit.members.length == 1 && unit.members[0].equals(unit.pivot)) return new int[]{0};
-
-        return new int[]{0,1,2,3,4,5};
-    }
-
-
     public int[] getMinMaxPivotX(Unit unit) {
 
         // calc unit width

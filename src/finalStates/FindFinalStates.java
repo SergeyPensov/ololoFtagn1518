@@ -10,7 +10,6 @@ public class FindFinalStates {
     private final Board board;
     private final Unit[] units;
     private final int currentUnitIndex;
-    private final int[] angles;
     private int maxAddedScore = 0;
     private int maxKilledLines = 0;
     private boolean killedLinesFulfilled = false;
@@ -21,7 +20,6 @@ public class FindFinalStates {
         this.units = units;
         this.currentUnitIndex = currentUnitIndex;
         this.startPosition = startPosition;
-        angles = Board.getAngles(units[currentUnitIndex]);
     }
 
     public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth, int countOfPositionsLimit, int linesKilled, int threadCount) throws Exception {
@@ -31,7 +29,7 @@ public class FindFinalStates {
         final Unit unit = units[currentUnitIndex];
         for (int j = 0; j < board.height; j++) {
             for (int i = -4; i < board.width+4; i++) {
-                for (int a : angles) {
+                for (int a=0; a<unit.maxAngle; ++a) {
                     final Point testPoint = new Point(i, board.height - j - 1);
                     final UnitState testState = new UnitState(testPoint, a);
                     if (board.isValid(unit, testState)) {
