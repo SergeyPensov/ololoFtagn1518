@@ -2,6 +2,7 @@ package finalStates;
 
 import vis.BoardVis;
 
+import javax.crypto.BadPaddingException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;

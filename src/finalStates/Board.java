@@ -94,7 +94,7 @@ public class Board {
     { (float)Math.sin(Math.PI * 0 / 3), (float)Math.sin(Math.PI * 1 / 3), (float)Math.sin(Math.PI * 2 / 3),
       (float)Math.sin(Math.PI * 3 / 3), (float)Math.sin(Math.PI * 4 / 3), (float)Math.sin(Math.PI * 5 / 3)};
 
-    private Unit rotate(final Unit unit, final int angle) {
+    private static Unit rotate(final Unit unit, final int angle) {
 
         Unit result = new Unit();
         result.pivot = unit.pivot;
@@ -123,7 +123,7 @@ public class Board {
         return result;
     }
 
-    public Unit transform(final Unit origUnit, final UnitState state) {
+    public static Unit transform(final Unit origUnit, final UnitState state) {
 
         // rotating
         final Unit unit = (state.angle % 6) == 0 ? origUnit : rotate(origUnit, state.angle);

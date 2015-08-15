@@ -2,7 +2,9 @@ package finalStates;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Created by kirill.sidorchuk on 8/7/2015.
@@ -28,6 +30,34 @@ public class Problem {
             result.unitBoards[i] = new Board(unit);
             i++;
         }
+
+        // analyzing all units to detect symmetry
+        final Point oddStart = new Point(0,1);
+        for (Unit unit : result.units) {
+
+            ArrayList<Integer> evenAngles = new ArrayList<>(6);
+
+            evenAngles.add(0);
+
+            Unit[] evenRotations = new Unit[6];
+            for( int a=0; a<6; ++a) {
+                evenRotations[a] = Board.transform(unit, new UnitState(Point.zero, a));
+
+                if(a>0){
+                    boolean dup=false;
+                    for( int a2=0; a2<a; a2++) {
+                        if( evenRotations[a2].equals(evenRotations[a])) {
+                            dup = true;
+                            break;
+                        }
+                    }
+                    if( !dup) evenAngles.add(a);
+                }
+            }
+
+            unit.maxAngle = evenAngles.size();
+        }
+
         return result;
     }
 

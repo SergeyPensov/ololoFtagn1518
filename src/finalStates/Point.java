@@ -4,6 +4,7 @@ package finalStates;
  * @Author Sergey Pensov
  */
 public class Point {
+    public final static Point zero = new Point(0,0);
     public final int x;
     public final int y;
 

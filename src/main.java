@@ -70,18 +70,14 @@ public class main {
                     BufferedImage image = vis.draw(board, null, null, null);
                     ImageIO.write(image, "png", new File(inputFileName + "_board.png"));
 //                }
-/*
 
                 // drawing units
-                int unitCounter = 0;
-                for (Unit unit : problem.units) {
-
-                    image = vis.draw(unitBoard, null, null);
+                for (int unitCounter=0; unitCounter<problem.units.length; ++unitCounter) {
+                    image = vis.draw(problem.unitBoards[unitCounter],
+                            problem.units[unitCounter], new UnitState(Point.zero,0), null);
                     ImageIO.write(image, "png", new File(String.format("%s_unit_%02d.png", inputFileName, unitCounter)));
-                    ++unitCounter;
                 }
 
-*/
                 Solver solver = new Solver(problem, inputFileName, saveImages);
                 final SolverResult[] results = solver.solveAll();
 
