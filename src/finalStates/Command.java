@@ -111,5 +111,12 @@ public abstract class Command {
 //        return command.letters().charAt(position);
 //    }
 
-    public static final String[] magicWords = {"hex","ei!","monkeyboy!", "yuggoth", "cthulhu", "trolls!", "davar", "ia! ia!2", "r'lyeh", "fhtagn", "         ", "galois", "eldritch"};
+    public static final String[] magicWords =
+       {"ei!", "Ia! Ia!!", "R'lyeh", "Yuggoth", "Tsathoggua", "YogSothoth",
+        "Necronomicon", "vigintillion", "Cthulhu fhtagn!",
+               "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn.",
+               "In his house at R'lyeh dead Cthulhu waits dreaming.",
+               "The Laundry", "Planet 10", "Yoyodyne", "monkeyboy",
+               "John Bigboote", "BLUE HADES", "CASE NIGHTMARE GREEN"
+       };
 }
