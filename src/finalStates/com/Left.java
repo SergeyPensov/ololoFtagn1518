@@ -16,7 +16,7 @@ public class Left extends Command {
 
     @Override
     public UnitState apply(UnitState s) {
-        return new UnitState(new Point(s.start.x-1, s.start.y), s.angle);
+        return new UnitState(new Point(s.start.x-1, s.start.y), s.angle, s.maxAngle);
     }
 
     @Override

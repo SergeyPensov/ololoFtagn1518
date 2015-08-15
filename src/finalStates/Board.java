@@ -311,7 +311,7 @@ public class Board {
             i -= minX - unit.pivot.x;
         }
 
-        return new UnitState(new Point(i, j), 0);
+        return new UnitState(new Point(i, j), 0, unit.maxAngle);
     }
 
     public int[] getMinMaxPivotX(Unit unit) {

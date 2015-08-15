@@ -31,7 +31,7 @@ public class FindFinalStates {
             for (int i = -4; i < board.width+4; i++) {
                 for (int a=0; a<unit.maxAngle; ++a) {
                     final Point testPoint = new Point(i, board.height - j - 1);
-                    final UnitState testState = new UnitState(testPoint, a);
+                    final UnitState testState = new UnitState(testPoint, a, unit.maxAngle);
                     if (board.isValid(unit, testState)) {
                         int lockCounter = 0;
                         for (int k = 0; k < Command.commands.length; k++) {

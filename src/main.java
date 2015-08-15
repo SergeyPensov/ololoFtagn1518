@@ -74,7 +74,7 @@ public class main {
                 // drawing units
                 for (int unitCounter=0; unitCounter<problem.units.length; ++unitCounter) {
                     image = vis.draw(problem.unitBoards[unitCounter],
-                            problem.units[unitCounter], new UnitState(Point.zero,0), null);
+                            problem.units[unitCounter], new UnitState(Point.zero,0, 6), null);
                     ImageIO.write(image, "png", new File(String.format("%s_unit_%02d.png", inputFileName, unitCounter)));
                 }
 

@@ -44,7 +44,6 @@ public class Solver {
         }
 
         for (int f = 0; f < unitsForTheGame.length; ++f) {
-            final int unitIndex = unitsForTheGame[f];
             final String sequence = play(board, allUnits, f, seed);
             if (sequence == null) break; // GAME OVER
             sb.append(sequence);

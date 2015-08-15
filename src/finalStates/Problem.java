@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 
 /**
  * Created by kirill.sidorchuk on 8/7/2015.
@@ -41,7 +40,7 @@ public class Problem {
 
             Unit[] evenRotations = new Unit[6];
             for( int a=0; a<6; ++a) {
-                evenRotations[a] = Board.transform(unit, new UnitState(Point.zero, a));
+                evenRotations[a] = Board.transform(unit, new UnitState(Point.zero, a, 6));
 
                 if(a>0){
                     boolean dup=false;

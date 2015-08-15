@@ -6,18 +6,21 @@ package finalStates;
 public class UnitState {
     public final Point start; // local coordinate system shift
     public final int angle; // 0..5
+    public final int maxAngle;
     private static final int width = 10000;
     private static final int height = 10000;
     private final int wh = width * height;
 
-    public UnitState(Point start, int angle) {
+    public UnitState(Point start, int angle, int maxAngle) {
         this.start = start;
         this.angle = angle;
+        this.maxAngle = maxAngle;
     }
 
     public UnitState(UnitState state) {
         this.start = state.start;
         this.angle = state.angle;
+        this.maxAngle = state.maxAngle;
     }
 
     public UnitState applyCommand(Command c) {
@@ -34,7 +37,7 @@ public class UnitState {
 
     // todo take symmetry into account when calculating index
     public int getIndex() {
-        return start.x + width * start.y + angle * wh;
+        return start.x + width * start.y + (angle) * wh;
     }
 
     @Override
@@ -47,6 +50,7 @@ public class UnitState {
         if (obj == null || !(obj instanceof UnitState)) return false;
 
         UnitState us = (UnitState) obj;
-        return (start.x == us.start.x) && (start.y == us.start.y) && (angle == us.angle);
+        return (start.x == us.start.x) && (start.y == us.start.y) &&
+                ( (angle) == (us.angle));
     }
 }
