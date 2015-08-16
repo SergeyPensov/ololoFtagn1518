@@ -13,12 +13,12 @@ public class FindFinalStates {
     private int maxAddedScore = 0;
     private int maxKilledLines = 0;
     private boolean killedLinesFulfilled = false;
-    private OptimalUnitPosition startPosition;
+    private final OptimalUnitPosition startPosition;
 
     private static Map<Integer,ExecutorService> executorsMap = new HashMap<>();
 
 
-    public FindFinalStates(Board board, Unit[] units, int currentUnitIndex, OptimalUnitPosition startPosition) {
+    public FindFinalStates(Board board, Unit[] units, int currentUnitIndex, final OptimalUnitPosition startPosition) {
         this.board = board;
         this.units = units;
         this.currentUnitIndex = currentUnitIndex;
@@ -74,9 +74,16 @@ public class FindFinalStates {
 
         if( optimalUnitPositions.size() == 0 ) return optimalUnitPositions;
 
+        // updating starting position
+
         if( maxKilledLines >= linesKilled ) {
             // goal fulfilled
             killedLinesFulfilled = true;
+            if( startPosition != null ) {
+                startPosition.posScore.addedScore += maxAddedScore;
+                if (maxKilledLines > startPosition.posScore.linesKilled)
+                    startPosition.posScore.linesKilled = maxKilledLines;
+            }
             return optimalUnitPositions;
         }
 
@@ -95,7 +102,7 @@ public class FindFinalStates {
 
             final int bestScore = optimalUnitPositions.get(0).score;
             for( int i=0; i<countOfBestPositions; ++i) {
-                OptimalUnitPosition position = optimalUnitPositions.get(i);
+                final OptimalUnitPosition position = optimalUnitPositions.get(i);
                 if (position.score * 3 < bestScore) break;
 
                 Callable<FindFinalStates> task = new Callable<FindFinalStates>() {
@@ -106,7 +113,7 @@ public class FindFinalStates {
 
                         FindFinalStates newFFS = new FindFinalStates(newBoard, units, currentUnitIndex + 1, position);
                         try {
-                            newFFS.getOptimalPositionInMap(depth - 1, 15, linesKilled, 1);
+                            newFFS.getOptimalPositionInMap(depth - 1, beamWidth, linesKilled, 1);
                         } catch (Exception ignored) {
                         }
                         return newFFS;
@@ -118,9 +125,17 @@ public class FindFinalStates {
                 }
                 else {
                     FindFinalStates ff = task.call();
-                    if( ff.killedLinesFulfilled) killedLinesFulfilled = true;
-                    position.posScore.addedScore += ff.maxAddedScore;
-                    if( killedLinesFulfilled ) break;
+                    if( ff.killedLinesFulfilled) {
+                        killedLinesFulfilled = true;
+                        if(ff.maxAddedScore > maxAddedScore) maxAddedScore = ff.maxAddedScore;
+                        if(ff.maxKilledLines > maxKilledLines) maxKilledLines = ff.maxKilledLines;
+                        if( startPosition != null ) {
+                            startPosition.posScore.addedScore += ff.maxAddedScore;
+                            if (ff.maxKilledLines > startPosition.posScore.linesKilled)
+                                startPosition.posScore.linesKilled = ff.maxKilledLines;
+                        }
+                        break;
+                    }
                 }
 
             }
@@ -135,32 +150,19 @@ public class FindFinalStates {
                 for (Future<FindFinalStates> threadResult : threadResults) {
                     FindFinalStates ff = threadResult.get();
                     if (ff != null) {
-                        ff.startPosition.posScore.addedScore += ff.maxAddedScore;
-                        if( ff.killedLinesFulfilled) killedLinesFulfilled = true;
+                        if( ff.killedLinesFulfilled) {
+                            killedLinesFulfilled = true;
+                            if(ff.maxAddedScore > maxAddedScore) maxAddedScore = ff.maxAddedScore;
+                            if(ff.maxKilledLines > maxKilledLines) maxKilledLines = ff.maxKilledLines;
+                            if( startPosition != null ) {
+                                startPosition.posScore.addedScore += ff.maxAddedScore;
+                                if (ff.maxKilledLines > startPosition.posScore.linesKilled)
+                                    startPosition.posScore.linesKilled = ff.maxKilledLines;
+                            }
+                        }
                     }
                 }
             }
-
-/*
-
-            for( int i=0; i<countOfBestPositions; ++i) {
-                OptimalUnitPosition position = optimalUnitPositions.get(i);
-                if( position.score * 3 < bestScore ) break;
-
-                Board newBoard = new Board(board);
-                newBoard.updateBoard(unit, position.state);
-
-                FindFinalStates newFFS = new FindFinalStates(newBoard, units, currentUnitIndex+1, startPosition);
-                newFFS.getOptimalPositionInMap(depth - 1, 15, linesKilled - maxKilledLines, threadCount);
-
-                position.posScore.addedScore += newFFS.maxAddedScore;
-
-                if( newFFS.maxKilledLines >= linesKilled - maxKilledLines) {
-                    // goal fulfulled
-                    break;
-                }
-            }
-*/
 
         }
 

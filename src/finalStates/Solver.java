@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 4;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 10;
     public static final int MAX_BEAM_WIDTH = 2;
     public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
 
@@ -81,7 +81,7 @@ public class Solver {
 
         // sorting on heuristic score, added score is main
         Collections.sort(optimalUnitPositions,
-                (o1, o2) -> (o2.score+o2.posScore.addedScore*20) - (o1.score+o1.posScore.addedScore*20));
+                (o1, o2) -> (o2.score+o2.posScore.addedScore*100) - (o1.score+o1.posScore.addedScore*100));
 
 
         // searching for paths that connects spawn position with locked position

@@ -225,7 +225,7 @@ public class Board {
         int addedScore;
         final int totalFilledX;
         final int depth;
-        final int linesKilled;
+        int linesKilled;
 
         public PosScore(int addedScore, int totalFilledX, int depth, int linesKilled) {
             this.addedScore = addedScore;
