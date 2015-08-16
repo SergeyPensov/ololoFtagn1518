@@ -15,6 +15,9 @@ public class FindFinalStates {
     private boolean killedLinesFulfilled = false;
     private OptimalUnitPosition startPosition;
 
+    private static Map<Integer,ExecutorService> executorsMap = new HashMap<>();
+
+
     public FindFinalStates(Board board, Unit[] units, int currentUnitIndex, OptimalUnitPosition startPosition) {
         this.board = board;
         this.units = units;
@@ -22,7 +25,17 @@ public class FindFinalStates {
         this.startPosition = startPosition;
     }
 
-    public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth, int countOfPositionsLimit, int linesKilled, int threadCount) throws Exception {
+    private static ExecutorService getExecutorService(int countOfThreads) {
+        ExecutorService service = executorsMap.get(countOfThreads);
+        if( service == null) {
+            service = Executors.newFixedThreadPool(countOfThreads);
+            executorsMap.put(countOfThreads, service);
+        }
+        return service;
+    }
+
+    public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth, int beamWidth,
+                                                                  int linesKilled, int threadCount) throws Exception {
         ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>(230);
         maxKilledLines = 0;
         maxAddedScore = 0;
@@ -69,11 +82,12 @@ public class FindFinalStates {
 
         if( depth > 0 && currentUnitIndex < units.length-1) {
 
+            // sorting positions on heuristic score
             Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
 
-            final int countOfBestPositions = countOfPositionsLimit < 0 ?
+            final int countOfBestPositions = beamWidth < 0 ?
                     optimalUnitPositions.size() :
-                    Math.min(countOfPositionsLimit, optimalUnitPositions.size());
+                    Math.min(beamWidth, optimalUnitPositions.size());
 
             ExecutorService threadPool = threadCount > 1 ? Executors.newFixedThreadPool(threadCount) : null;
 
@@ -92,7 +106,7 @@ public class FindFinalStates {
 
                         FindFinalStates newFFS = new FindFinalStates(newBoard, units, currentUnitIndex + 1, position);
                         try {
-                            newFFS.getOptimalPositionInMap(depth - 1, 15, linesKilled - maxKilledLines, 1);
+                            newFFS.getOptimalPositionInMap(depth - 1, 15, linesKilled, 1);
                         } catch (Exception ignored) {
                         }
                         return newFFS;

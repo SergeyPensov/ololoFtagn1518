@@ -2,7 +2,6 @@ package finalStates;
 
 import vis.BoardVis;
 
-import javax.crypto.BadPaddingException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,8 +14,10 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 3;
-    public static final int MAX_BEAM_SEARCH_BRANCHES = 8;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 4;
+    public static final int MAX_BEAM_WIDTH = 2;
+    public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
+
     private Problem problem;
     private String path;
     private final boolean saveImages;
@@ -73,12 +74,14 @@ public class Solver {
         // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex, null);
         ArrayList<OptimalUnitPosition> optimalUnitPositions =
-                findFinalStates.getOptimalPositionInMap(MAX_BEAM_SEARCH_DEPTH, MAX_BEAM_SEARCH_BRANCHES, 1, 2);
+                findFinalStates.getOptimalPositionInMap(MAX_BEAM_SEARCH_DEPTH, MAX_BEAM_WIDTH, BEAM_SEARCH_GOAL_LINES_KILLED
+                        , 2);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size()
         + ", line kills fulfulled=" + findFinalStates.isKilledLinesFulfilled());
 
-        // sorting on combined criterion
-        Collections.sort(optimalUnitPositions, (o1, o2) -> (o2.score+o2.posScore.addedScore*2) - (o1.score+o1.posScore.addedScore*2));
+        // sorting on heuristic score, added score is main
+        Collections.sort(optimalUnitPositions,
+                (o1, o2) -> (o2.score+o2.posScore.addedScore*20) - (o1.score+o1.posScore.addedScore*20));
 
 
         // searching for paths that connects spawn position with locked position
