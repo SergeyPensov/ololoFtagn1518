@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class Solver {
 
+    public static final int MAX_BEAM_SEARCH_DEPTH = 3;
+    public static final int MAX_BEAM_SEARCH_BRANCHES = 8;
     private Problem problem;
     private String path;
     private final boolean saveImages;
@@ -70,7 +72,8 @@ public class Solver {
 
         // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex, null);
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = findFinalStates.getOptimalPositionInMap(4, 8, 1, 2);
+        ArrayList<OptimalUnitPosition> optimalUnitPositions =
+                findFinalStates.getOptimalPositionInMap(MAX_BEAM_SEARCH_DEPTH, MAX_BEAM_SEARCH_BRANCHES, 1, 2);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size()
         + ", line kills fulfulled=" + findFinalStates.isKilledLinesFulfilled());
 

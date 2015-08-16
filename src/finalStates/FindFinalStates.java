@@ -52,8 +52,7 @@ public class FindFinalStates {
                                 maxAddedScore = posScore.addedScore;
                             }
 
-                            optimalUnitPositions.add(new OptimalUnitPosition(testState, posScore,
-                                        posScore.depth*2 + posScore.totalFilledX + posScore.addedScore/5));
+                            optimalUnitPositions.add(new OptimalUnitPosition(testState, posScore, board));
                         }
                     }
                 }
