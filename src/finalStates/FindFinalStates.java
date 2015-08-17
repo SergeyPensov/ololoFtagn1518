@@ -36,43 +36,63 @@ public class FindFinalStates {
 
     public ArrayList<OptimalUnitPosition> getOptimalPositionInMap(int depth, int beamWidth,
                                                                   int linesKilled, int threadCount) throws Exception {
-        ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>(230);
+
+        final Unit unit = units[currentUnitIndex];
+        final HashSet<UnitState> lockingStates = UnitPositionSearcher.search(board, unit, board.getSpawnState(unit));
+
+        if( lockingStates == null || lockingStates.size() == 0) return new ArrayList<>();
+
+        ArrayList<OptimalUnitPosition> optimalUnitPositions = new ArrayList<>(lockingStates.size());
         maxKilledLines = 0;
         maxAddedScore = 0;
-        final Unit unit = units[currentUnitIndex];
-        for (int j = 0; j < board.height; j++) {
-            for (int i = -4; i < board.width+4; i++) {
-                for (int a=0; a<unit.maxAngle; ++a) {
-                    final Point testPoint = new Point(i, board.height - j - 1);
-                    final UnitState testState = new UnitState(testPoint, a, unit.maxAngle);
-                    if (board.isValid(unit, testState)) {
-                        int lockCounter = 0;
-                        for (int k = 0; k < Command.commands.length; k++) {
-                            if (!board.isValid(unit, testState.applyCommand(Command.getCommand(k)))) {
-                                lockCounter++;
-                                break;
-                            }
-                        }
+        for (UnitState lockingState : lockingStates) {
+            Board.PosScore posScore = board.getPositionScore(unit, lockingState);
 
-                        if (lockCounter != 0) {
-                            Board.PosScore posScore = board.getPositionScore(unit, testState);
-
-                            if( posScore.linesKilled > maxKilledLines ) {
-                                maxKilledLines = posScore.linesKilled;
-                            }
-
-                            if( posScore.addedScore > maxAddedScore ) {
-                                maxAddedScore = posScore.addedScore;
-                            }
-
-                            optimalUnitPositions.add(new OptimalUnitPosition(testState, posScore, board));
-                        }
-                    }
-                }
+            if (posScore.linesKilled > maxKilledLines) {
+                maxKilledLines = posScore.linesKilled;
             }
+
+            if (posScore.addedScore > maxAddedScore) {
+                maxAddedScore = posScore.addedScore;
+            }
+
+            optimalUnitPositions.add(new OptimalUnitPosition(lockingState, posScore, board));
         }
 
-        if( optimalUnitPositions.size() == 0 ) return optimalUnitPositions;
+
+//        for (int j = 0; j < board.height; j++) {
+//            for (int i = -4; i < board.width+4; i++) {
+//                for (int a=0; a<unit.maxAngle; ++a) {
+//                    final Point testPoint = new Point(i, board.height - j - 1);
+//                    final UnitState testState = new UnitState(testPoint, a, unit.maxAngle);
+//                    if (board.isValid(unit, testState)) {
+//                        int lockCounter = 0;
+//                        for (int k = 0; k < Command.commands.length; k++) {
+//                            if (!board.isValid(unit, testState.applyCommand(Command.getCommand(k)))) {
+//                                lockCounter++;
+//                                break;
+//                            }
+//                        }
+//
+//                        if (lockCounter != 0) {
+//                            Board.PosScore posScore = board.getPositionScore(unit, testState);
+//
+//                            if( posScore.linesKilled > maxKilledLines ) {
+//                                maxKilledLines = posScore.linesKilled;
+//                            }
+//
+//                            if( posScore.addedScore > maxAddedScore ) {
+//                                maxAddedScore = posScore.addedScore;
+//                            }
+//
+//                            optimalUnitPositions.add(new OptimalUnitPosition(testState, posScore, board));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        if( optimalUnitPositions.size() == 0 ) return optimalUnitPositions;
 
         // updating starting position
 

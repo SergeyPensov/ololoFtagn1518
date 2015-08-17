@@ -14,9 +14,10 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 10;
-    public static final int MAX_BEAM_WIDTH = 2;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 6;
+    public static final int MAX_BEAM_WIDTH = 3;
     public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
+    public static final int THREAD_COUNT = 6;
 
     private Problem problem;
     private String path;
@@ -74,8 +75,11 @@ public class Solver {
         // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex, null);
         ArrayList<OptimalUnitPosition> optimalUnitPositions =
-                findFinalStates.getOptimalPositionInMap(MAX_BEAM_SEARCH_DEPTH, MAX_BEAM_WIDTH, BEAM_SEARCH_GOAL_LINES_KILLED
-                        , 2);
+                findFinalStates.getOptimalPositionInMap(
+                        MAX_BEAM_SEARCH_DEPTH,
+                        MAX_BEAM_WIDTH,
+                        BEAM_SEARCH_GOAL_LINES_KILLED,
+                        THREAD_COUNT);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size()
         + ", line kills fulfulled=" + findFinalStates.isKilledLinesFulfilled());
 

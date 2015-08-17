@@ -18,8 +18,6 @@ public class Board {
     public int score = 0;
     private int oldLinesKilled = 0;
 
-    private Set<Integer> checkedY = new HashSet<>(10);
-
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
@@ -253,7 +251,7 @@ public class Board {
             setCell(i, j, CellState.FILLED.getState());
         }
 
-        checkedY.clear();
+        Set<Integer> checkedY = new HashSet<>(10);
 
         int linesKilled = 0;
         int totalFilledX = 0;
