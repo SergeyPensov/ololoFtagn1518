@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 6;
-    public static final int MAX_BEAM_WIDTH = 3;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 1;
+    public static final int MAX_BEAM_WIDTH = 13;
     public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
     public static final int THREAD_COUNT = 6;
 

@@ -15,7 +15,7 @@ public class CW extends Command {
 
     @Override
     public UnitState apply(UnitState s) {
-        return new UnitState(s.start, (s.angle+1) % 6, s.maxAngle);
+        return new UnitState(s.start, (s.angle+1) % s.maxAngle, s.maxAngle);
     }
 
     @Override

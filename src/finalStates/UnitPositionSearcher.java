@@ -10,9 +10,9 @@ public class UnitPositionSearcher {
 
     public static HashSet<UnitState> search(Board board, Unit unit, UnitState startState) {
 
-        HashSet<UnitState> visitedStates = new HashSet<>(board.height*board.width);
+        HashSet<UnitState> visitedStates = new HashSet<>(board.height * board.width);
 
-        if( !board.isValid(unit, startState)) return null;
+        if (!board.isValid(unit, startState)) return null;
 
         HashSet<UnitState> lockingStates = new HashSet<>(100);
 
@@ -20,22 +20,19 @@ public class UnitPositionSearcher {
         toVisit.add(startState);
         visitedStates.add(startState);
 
-        while( toVisit.size() != 0 ) {
+        while (toVisit.size() != 0) {
             UnitState state = toVisit.pop();
 
             for (Command cmd : Command.commands) {
                 final UnitState newState = cmd.apply(state);
-                if (newState.angle < unit.maxAngle) {
-                    if( !visitedStates.contains(newState)) {
-                        visitedStates.add(newState);
+                if (!visitedStates.contains(newState)) {
+                    visitedStates.add(newState);
 
-                        if (!board.isValid(unit, newState)) {
-                            // parent state is locking state
-                            lockingStates.add(state);
-                        }
-                        else {
-                            toVisit.add(newState);
-                        }
+                    if (!board.isValid(unit, newState)) {
+                        // parent state is locking state
+                        lockingStates.add(state);
+                    } else {
+                        toVisit.add(newState);
                     }
                 }
             }
