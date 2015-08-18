@@ -82,25 +82,27 @@ public class UnitPositionSearcher {
             nIterations++;
 
             final Node node = toVisit.pop();
-            UnitState state = node.state;
+            final UnitState state = node.state;
             if (state.equals(targetState)) {
                 targetNode = node;
                 break;
             }
 
-            visitedStates.add(state);
+            if( !visitedStates.contains(state)) {
+                visitedStates.add(state);
 
-            // trying all transitions
-            for (Command cmd : Command.commands) {
-                final UnitState newState = cmd.apply(state);
+                // trying all transitions
+                for (Command cmd : Command.commands) {
+                    final UnitState newState = cmd.apply(state);
 
-                if (!visitedStates.contains(newState) && !invalidStates.contains(newState)) {
+                    if (!visitedStates.contains(newState) && !invalidStates.contains(newState)) {
 
-                    if (!board.isValid(unit, newState)) {
-                        invalidStates.add(newState);
-                    } else {
-                        Node nextNode = new Node(cmd, node, newState);
-                        toVisit.add(nextNode);
+                        if (!board.isValid(unit, newState)) {
+                            invalidStates.add(newState);
+                        } else {
+                            Node nextNode = new Node(cmd, node, newState);
+                            toVisit.add(nextNode);
+                        }
                     }
                 }
             }

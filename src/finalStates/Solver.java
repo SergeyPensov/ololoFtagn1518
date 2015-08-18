@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 10;
-    public static final int MAX_BEAM_WIDTH = 6;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 1;
+    public static final int MAX_BEAM_WIDTH = 2;
     public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
     public static final int THREAD_COUNT = 8;
 
@@ -58,7 +58,7 @@ public class Solver {
         int unitIndex = 0;
         while( unitIndex < unitsForTheGame.length ) {
             PlayResult pr = play(board, allUnits, unitIndex, seed);
-            if (pr.sequence == null) break; // GAME OVER
+            if (pr == null || pr.sequence == null) break; // GAME OVER
             sb.append(pr.sequence);
             unitIndex = pr.nextUnitIndex;
         }
@@ -115,8 +115,9 @@ public class Solver {
             // using best scored position
 
             // sorting on heuristic score, added score is main
-            Collections.sort(optimalUnitPositions,
-                    (o1, o2) -> (o2.score+(o2.posScore.gameScore-board.score) *1000) - (o1.score+(o1.posScore.gameScore-board.score) *1000));
+//            Collections.sort(optimalUnitPositions,
+//                    (o1, o2) -> (o2.score+(o2.posScore.gameScore-board.score) *1000) - (o1.score+(o1.posScore.gameScore-board.score) *1000));
+            Collections.sort(optimalUnitPositions, (o1, o2) -> (o2.score - o1.score));
 
             playPositions.add(optimalUnitPositions.get(0));
         }

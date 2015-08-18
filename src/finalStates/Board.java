@@ -221,12 +221,14 @@ public class Board {
 
     public static class PosScore {
         int gameScore;
+        int addedScore;
         final int filledToGap;
         final int depth;
         int linesKilled;
 
-        public PosScore(int gameScore, int filledToGap, int depth, int linesKilled) {
+        public PosScore(int gameScore, int addedScore, int filledToGap, int depth, int linesKilled) {
             this.gameScore = gameScore;
+            this.addedScore = addedScore;
             this.filledToGap = filledToGap;
             this.depth = depth;
             this.linesKilled = linesKilled;
@@ -236,6 +238,7 @@ public class Board {
         public String toString() {
             return "PosScore{" +
                     "gameScore=" + gameScore +
+                    ", addedScore=" + addedScore +
                     ", filledToGap=" + filledToGap +
                     ", depth=" + depth +
                     '}';
@@ -326,7 +329,7 @@ public class Board {
 
         final int addedScore = points + bonus;
 
-        return new PosScore( score + addedScore, maxFilledToGap, depth, linesKilled);
+        return new PosScore( score + addedScore, addedScore, maxFilledToGap, depth, linesKilled);
     }
 
     public UnitState getSpawnState(Unit unit) {

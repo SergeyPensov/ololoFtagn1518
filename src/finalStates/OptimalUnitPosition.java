@@ -18,10 +18,15 @@ public class OptimalUnitPosition {
     public OptimalUnitPosition(UnitState testState, Board.PosScore posScore, Board board) {
         this.state = testState;
         this.posScore = posScore;
-        this.score =
-                (300*posScore.depth)/board.height +
-                (10*posScore.filledToGap)/board.width +
-                posScore.gameScore;
+
+        if( posScore.depth > board.height/2 && posScore.linesKilled != 0) {
+            // deep place -> avoiding burning lines too soon to get better score with multiple lines burnt
+            this.score = posScore.depth;// (300 * posScore.depth) / board.height + (10 * posScore.filledToGap) / board.width - posScore.gameScore;
+        }
+        else {
+            this.score =
+                    (300 * posScore.depth) / board.height + (10 * posScore.filledToGap) / board.width + posScore.gameScore;
+        }
     }
 
     @Override
