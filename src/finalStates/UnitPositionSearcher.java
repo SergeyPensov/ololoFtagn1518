@@ -18,18 +18,24 @@ public class UnitPositionSearcher {
 
         LinkedList<UnitState> toVisit = new LinkedList<>();
         toVisit.add(startState);
-        visitedStates.add(startState);
 
+        HashSet<UnitState> invalidStates = new HashSet<>(board.height * board.width);
+
+        int nIterations = 0;
         while (toVisit.size() != 0) {
+            nIterations++;
+
             UnitState state = toVisit.pop();
+            if( !visitedStates.contains(state)) {
+                visitedStates.add(state);
 
-            for (Command cmd : Command.commands) {
-                final UnitState newState = cmd.apply(state);
-                if (!visitedStates.contains(newState)) {
-                    visitedStates.add(newState);
+                // trying all transitions
+                for (Command cmd : Command.commands) {
+                    final UnitState newState = cmd.apply(state);
 
-                    if (!board.isValid(unit, newState)) {
+                    if ( invalidStates.contains(newState) || !board.isValid(unit, newState)) {
                         // parent state is locking state
+                        invalidStates.add(newState);
                         lockingStates.add(state);
                     } else {
                         toVisit.add(newState);
