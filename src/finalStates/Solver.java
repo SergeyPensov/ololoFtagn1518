@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 2;
-    public static final int MAX_BEAM_WIDTH = 2;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 7;
+    public static final int MAX_BEAM_WIDTH = 8;
     public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
-    public static final int THREAD_COUNT = 1;
+    public static final int THREAD_COUNT = 8;
 
     private Problem problem;
     private String path;
@@ -82,7 +82,7 @@ public class Solver {
 
         // sorting on heuristic score, added score is main
         Collections.sort(optimalUnitPositions,
-                (o1, o2) -> (o2.score+o2.posScore.gameScore *100) - (o1.score+o1.posScore.gameScore *100));
+                (o1, o2) -> (o2.score+o2.posScore.gameScore *1000) - (o1.score+o1.posScore.gameScore *1000));
 
 
         // searching for paths that connects spawn position with locked position

@@ -98,7 +98,8 @@ public class FindFinalStates {
                     // calling search
                     FindFinalStates newFFS = new FindFinalStates(newBoard, units, currentUnitIndex + 1, position);
                     try {
-                        newFFS.getOptimalPositionInMap(depth - 1, beamWidth, linesKilled, 1);
+                        final int newBeamWidth = beamWidth < 3 ? beamWidth : beamWidth-1;
+                        newFFS.getOptimalPositionInMap(depth - 1, newBeamWidth, linesKilled, 1);
                     } catch (Exception ignored) {
                     }
                     return newFFS;
