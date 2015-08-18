@@ -201,7 +201,7 @@ public class Board {
                         setCell(x, y2 + 1, readCell(x, y2));
                     }
                 }
-                y++;
+                if( y != 0 ) y++;
             }
         }
 
