@@ -48,16 +48,21 @@ public class FindFinalStates {
         maxScore = 0;
         for (UnitState lockingState : lockingStates) {
             Board.PosScore posScore = board.getPositionScore(unit, lockingState);
+            final OptimalUnitPosition position = new OptimalUnitPosition(lockingState, posScore, board);
 
             if (posScore.linesKilled > maxKilledLines) {
                 maxKilledLines = posScore.linesKilled;
+            }
+
+            if( posScore.linesKilled >= linesKilled && startPosition != null) {
+                startPosition.next = position;
             }
 
             if (posScore.gameScore > maxScore) {
                 maxScore = posScore.gameScore;
             }
 
-            optimalUnitPositions.add(new OptimalUnitPosition(lockingState, posScore, board));
+            optimalUnitPositions.add(position);
         }
 
         // updating starting position
@@ -130,6 +135,7 @@ public class FindFinalStates {
                 if (ff != null) {
                     if( ff.killedLinesFulfilled) {
                         killedLinesFulfilled = true;
+                        if( startPosition != null ) startPosition.next = ff.startPosition;
                     }
 
                     if(ff.maxScore > maxScore) maxScore = ff.maxScore;

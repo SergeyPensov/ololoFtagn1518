@@ -1,5 +1,6 @@
 package finalStates;
 
+import sun.dc.pr.PRError;
 import vis.BoardVis;
 
 import javax.imageio.ImageIO;
@@ -14,14 +15,24 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 7;
-    public static final int MAX_BEAM_WIDTH = 8;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 10;
+    public static final int MAX_BEAM_WIDTH = 6;
     public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
     public static final int THREAD_COUNT = 8;
 
     private Problem problem;
     private String path;
     private final boolean saveImages;
+
+    private static class PlayResult {
+        final String sequence;
+        final int nextUnitIndex;
+
+        public PlayResult(String sequence, int nextUnitIndex) {
+            this.sequence = sequence;
+            this.nextUnitIndex = nextUnitIndex;
+        }
+    }
 
     public Solver(Problem problem, String path, boolean saveImages) {
         this.problem = problem;
@@ -44,10 +55,12 @@ public class Solver {
 
         Board board = problem.getBoard();
         StringBuilder sb = new StringBuilder(1024);
-        for (int f = 0; f < unitsForTheGame.length; ++f) {
-            final String sequence = play(board, allUnits, f, seed);
-            if (sequence == null) break; // GAME OVER
-            sb.append(sequence);
+        int unitIndex = 0;
+        while( unitIndex < unitsForTheGame.length ) {
+            PlayResult pr = play(board, allUnits, unitIndex, seed);
+            if (pr.sequence == null) break; // GAME OVER
+            sb.append(pr.sequence);
+            unitIndex = pr.nextUnitIndex;
         }
 
         System.out.println("score=" + board.score);
@@ -56,18 +69,15 @@ public class Solver {
         return new SolverResult(problem.id, seed, "", solution);
     }
 
-    private String play(Board board, Unit[] units, int currentUnitIndex, int seed) throws Exception {
+    private PlayResult play(Board board, Unit[] units, int currentUnitIndex, int seed) throws Exception {
 
-        final Unit unit = units[currentUnitIndex];
-        final UnitState spawnState = board.getSpawnState(unit);
+        Unit unit = units[currentUnitIndex];
+        UnitState spawnState = board.getSpawnState(unit);
 
         drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
 
         boolean live = board.isValid(unit, spawnState);
         if (!live) return null; // GAME OVER - spawn location is not valid
-
-        UnitState state = spawnState;
-        int moveIndex = 1;
 
         // searching for all "locked" states for the unit
         FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex, null);
@@ -78,55 +88,98 @@ public class Solver {
                         BEAM_SEARCH_GOAL_LINES_KILLED,
                         THREAD_COUNT);
         System.out.println("Count of possible positions for unit #" + currentUnitIndex + "=" + optimalUnitPositions.size()
-        + ", line kills fulfulled=" + findFinalStates.isKilledLinesFulfilled());
+                + ", line kills fulfulled=" + findFinalStates.isKilledLinesFulfilled());
 
-        // sorting on heuristic score, added score is main
-        Collections.sort(optimalUnitPositions,
-                (o1, o2) -> (o2.score+o2.posScore.gameScore *1000) - (o1.score+o1.posScore.gameScore *1000));
+        ArrayList<OptimalUnitPosition> playPositions = new ArrayList<>(3);
+        if( findFinalStates.isKilledLinesFulfilled() ) {
+            // using known positions sequence
 
-
-        // searching for paths that connects spawn position with locked position
-        ThreeNode threeNode = null;
-        for (OptimalUnitPosition optimalUnitPosition : optimalUnitPositions) {
-            threeNode = findFinalStates.getAllPath(optimalUnitPosition, unit, board);
-            if (threeNode != null) {
-                System.out.println("using position scored " + optimalUnitPosition.score + ", max score=" + optimalUnitPosition.posScore.gameScore);
-                break;
+            OptimalUnitPosition sequenceStart = null;
+            for (OptimalUnitPosition position : optimalUnitPositions) {
+                if( position.next != null) {
+                    sequenceStart = position;
+                    break;
+                }
             }
-        }
 
-        if (threeNode == null) {
-            System.out.println("path not found");
-            return null;
-        }
-        ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
-        System.out.println("Moves for unit #" + currentUnitIndex + "=" + nodes.size());
+            if( sequenceStart == null ) throw new RuntimeException("failed to find sequence start for fulfulled goal");
 
-        List<Command> commands = new ArrayList<>(100);
-        for (int i = nodes.size() - 1; 0 <= i; i--) {
-            state = nodes.get(i).state;
-
-            commands.add(nodes.get(i).command);
-//            if (saveImages)  drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
-        }
-
-        // generating lock command
-        boolean lockFound = false;
-        for (Command command : Command.commands) {
-            if (!board.isValid(unit, command.apply(state))) {
-                lockFound = true;
-                commands.add(command);
-                break;
+            while(sequenceStart != null ) {
+                playPositions.add(sequenceStart);
+                sequenceStart = sequenceStart.next;
             }
+
+            System.out.println("Sequence length to fulfull goal is " + playPositions.size());
+        }
+        else {
+            // using best scored position
+
+            // sorting on heuristic score, added score is main
+            Collections.sort(optimalUnitPositions,
+                    (o1, o2) -> (o2.score+(o2.posScore.gameScore-board.score) *1000) - (o1.score+(o1.posScore.gameScore-board.score) *1000));
+
+            playPositions.add(optimalUnitPositions.get(0));
         }
 
-        if (!lockFound) throw new RuntimeException("lock command cannot be found!");
+        // playing found sequence
+        int moveIndex = 1;
+        StringBuilder sequenceSb = new StringBuilder(100);
+        for (OptimalUnitPosition position : playPositions) {
 
-        // updating the board with locked unit
-        board.updateBoard(unit, state);
-        System.out.println("score = " + board.score);
-        if (saveImages) drawFrame(board, null, currentUnitIndex, state, moveIndex + 1, seed, null);
-        return Command.encode(commands);
+            // fetching current unit and testing if game can continue
+            unit = units[currentUnitIndex];
+            spawnState = board.getSpawnState(unit);
+
+            drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
+            if( !board.isValid(unit, spawnState) ) throw new RuntimeException("playing sequence of positions leads to game end");
+
+            final ArrayList<Command> commands = UnitPositionSearcher.searchPath(board, unit, spawnState, position.state);
+            if( commands == null || commands.size() == 0) throw new RuntimeException("path to searched position not found");
+
+//            ThreeNode threeNode = findFinalStates.getAllPath(position, unit, board);
+//            if( threeNode == null) throw new RuntimeException("failed to find path to position");
+//
+//            // generating commands
+//            ArrayList<ThreeNode> nodes = FindFinalStates.getShortPath(threeNode.finalThreeNode);
+//            System.out.println("Moves for unit #" + currentUnitIndex + "=" + nodes.size());
+//
+//            List<Command> commands = new ArrayList<>(100);
+//            for (int i = nodes.size() - 1; 0 <= i; i--) {
+//                state = nodes.get(i).state;
+//
+//                commands.add(nodes.get(i).command);
+////            if (saveImages)  drawFrame(board, unit, currentUnitIndex, state, moveIndex++, seed, nodes.get(i).command);
+//            }
+
+//            if( saveImages) {
+//                UnitState curState = spawnState;
+//                for (Command command : commands) {
+//                    curState = command.apply(curState);
+//                    drawFrame(board, unit, currentUnitIndex, curState, moveIndex++, seed, command);
+//                }
+//            }
+
+            // generating lock command
+            boolean lockFound = false;
+            for (Command command : Command.commands) {
+                if (!board.isValid(unit, command.apply(position.state))) {
+                    lockFound = true;
+                    commands.add(command);
+                    break;
+                }
+            }
+            if (!lockFound) throw new RuntimeException("lock command cannot be found!");
+
+            // updating the board with locked unit
+            board.updateBoard(unit, position.state);
+            System.out.println("score = " + board.score);
+            if (saveImages) drawFrame(board, null, currentUnitIndex, position.state, moveIndex + 1, seed, null);
+
+            sequenceSb.append(Command.encode(commands));
+            currentUnitIndex++;
+        }
+
+        return new PlayResult(sequenceSb.toString(), currentUnitIndex);
     }
 
     private void drawFrame(Board board, Unit unit, int currentUnitIndex, UnitState state, int moveIndex, int seed, Command command) {

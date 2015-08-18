@@ -7,6 +7,7 @@ public class OptimalUnitPosition {
     public final UnitState state;
     public final Board.PosScore posScore;
     public int score; // heuristic score
+    public OptimalUnitPosition next = null;
 
     public OptimalUnitPosition(UnitState state, Board.PosScore posScore, int score) {
         this.state = state;
