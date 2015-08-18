@@ -18,9 +18,9 @@ public class OptimalUnitPosition {
         this.state = testState;
         this.posScore = posScore;
         this.score =
-                (200*posScore.depth)/board.height +
-                (100*posScore.totalFilledX)/board.width +
-                posScore.addedScore;
+                (300*posScore.depth)/board.height +
+                (10*posScore.filledToGap)/board.width +
+                posScore.gameScore;
     }
 
     @Override

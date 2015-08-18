@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 10;
-    public static final int MAX_BEAM_WIDTH = 3;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 2;
+    public static final int MAX_BEAM_WIDTH = 2;
     public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
-    public static final int THREAD_COUNT = 6;
+    public static final int THREAD_COUNT = 1;
 
     private Problem problem;
     private String path;
@@ -33,11 +33,6 @@ public class Solver {
 
         System.out.println("Solving for seed " + seed);
 
-
-        StringBuilder sb = new StringBuilder(1024);
-
-        Board board = problem.getBoard();
-
         // creating all units
         final int[] unitsForTheGame = problem.getUnitsForTheGame(seed);
         final Unit[] allUnits = new Unit[unitsForTheGame.length];
@@ -47,6 +42,8 @@ public class Solver {
             ++index;
         }
 
+        Board board = problem.getBoard();
+        StringBuilder sb = new StringBuilder(1024);
         for (int f = 0; f < unitsForTheGame.length; ++f) {
             final String sequence = play(board, allUnits, f, seed);
             if (sequence == null) break; // GAME OVER
@@ -85,7 +82,7 @@ public class Solver {
 
         // sorting on heuristic score, added score is main
         Collections.sort(optimalUnitPositions,
-                (o1, o2) -> (o2.score+o2.posScore.addedScore*100) - (o1.score+o1.posScore.addedScore*100));
+                (o1, o2) -> (o2.score+o2.posScore.gameScore *100) - (o1.score+o1.posScore.gameScore *100));
 
 
         // searching for paths that connects spawn position with locked position
@@ -93,7 +90,7 @@ public class Solver {
         for (OptimalUnitPosition optimalUnitPosition : optimalUnitPositions) {
             threeNode = findFinalStates.getAllPath(optimalUnitPosition, unit, board);
             if (threeNode != null) {
-                System.out.println("using position scored " + optimalUnitPosition.score + ", max added score=" + optimalUnitPosition.posScore.addedScore);
+                System.out.println("using position scored " + optimalUnitPosition.score + ", max score=" + optimalUnitPosition.posScore.gameScore);
                 break;
             }
         }

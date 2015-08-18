@@ -220,14 +220,14 @@ public class Board {
     }
 
     public static class PosScore {
-        int addedScore;
-        final int totalFilledX;
+        int gameScore;
+        final int filledToGap;
         final int depth;
         int linesKilled;
 
-        public PosScore(int addedScore, int totalFilledX, int depth, int linesKilled) {
-            this.addedScore = addedScore;
-            this.totalFilledX = totalFilledX;
+        public PosScore(int gameScore, int filledToGap, int depth, int linesKilled) {
+            this.gameScore = gameScore;
+            this.filledToGap = filledToGap;
             this.depth = depth;
             this.linesKilled = linesKilled;
         }
@@ -235,8 +235,8 @@ public class Board {
         @Override
         public String toString() {
             return "PosScore{" +
-                    "addedScore=" + addedScore +
-                    ", totalFilledX=" + totalFilledX +
+                    "gameScore=" + gameScore +
+                    ", filledToGap=" + filledToGap +
                     ", depth=" + depth +
                     '}';
         }
@@ -254,18 +254,56 @@ public class Board {
         Set<Integer> checkedY = new HashSet<>(10);
 
         int linesKilled = 0;
-        int totalFilledX = 0;
+        int maxFilledToGap = 0;
         int depth = 0;
         for (Point member : transformed.members) {
             if (!checkedY.contains(member.y)) {
                 checkedY.add(member.y);
 
                 int filledX = 0;
+                int maxFilled = 0;
+                int filledSize = 0;
+                int maxGap = 0;
+                int gapSize = 0;
+                boolean inFilled = true;
                 for (int x = 0; x < width; ++x) {
-                    if (readCell(x, member.y) != 0) ++filledX;
+                    final int cellV = readCell(x, member.y);
+                    if( inFilled) {
+                        if( 1 == cellV) {
+                            // filled segment continues
+                            filledSize++;
+                            if( filledSize > maxFilled ) maxFilled = filledSize;
+                        }
+                        else {
+                            // filled segment finished
+                            inFilled = false;
+
+                            gapSize = 1; // gap starts
+                            if( gapSize > maxGap) maxGap = gapSize;
+                        }
+                    } else { // in gap
+                        if( 1 == cellV ) {
+                            // filled segment started
+                            inFilled = true;
+
+                            filledSize = 1;
+                            if( filledSize > maxFilled ) maxFilled = filledSize;
+                        }
+                        else {
+                            // gap continues
+                            gapSize++;
+                            if( gapSize > maxGap) maxGap = gapSize;
+                        }
+                    }
+                    if (cellV != 0) ++filledX;
                 }
+
                 if (filledX == width ) linesKilled++;
-                totalFilledX += filledX;
+
+                // filledToGap / maxGap ratio
+                int filledToGap = maxGap * maxFilled; //maxGap == 0 ? 100 : (100 * maxFilled) / maxGap;
+                if( filledToGap > maxFilledToGap) maxFilledToGap = filledToGap;
+
                 depth += member.y;
             }
         }
@@ -288,7 +326,7 @@ public class Board {
 
         final int addedScore = points + bonus;
 
-        return new PosScore( addedScore, totalFilledX, depth, linesKilled);
+        return new PosScore( score + addedScore, maxFilledToGap, depth, linesKilled);
     }
 
     public UnitState getSpawnState(Unit unit) {
