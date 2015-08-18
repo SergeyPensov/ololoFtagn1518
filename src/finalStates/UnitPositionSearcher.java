@@ -63,7 +63,7 @@ public class UnitPositionSearcher {
 
     public static ArrayList<Command> searchPath(Board board, Unit unit, UnitState startState, UnitState targetState) {
 
-        if (startState.equals(targetState)) throw new RuntimeException("start and target states are the same");
+        if (startState.equals(targetState)) return new ArrayList<>();
 
         HashSet<UnitState> visitedStates = new HashSet<>(board.height * board.width);
 

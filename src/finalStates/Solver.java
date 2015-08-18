@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class Solver {
 
-    public static final int MAX_BEAM_SEARCH_DEPTH = 1;
-    public static final int MAX_BEAM_WIDTH = 2;
-    public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 2;
+    public static final int MAX_BEAM_SEARCH_DEPTH = 6;
+    public static final int MAX_BEAM_WIDTH = 4;
+    public static final int BEAM_SEARCH_GOAL_LINES_KILLED = 1;
     public static final int THREAD_COUNT = 8;
 
     private Problem problem;
