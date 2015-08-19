@@ -47,8 +47,8 @@ public class Solver {
         // creating all units
         final int[] unitsForTheGame = problem.getUnitsForTheGame(seed);
         final Unit[] allUnits = new Unit[unitsForTheGame.length];
-        int index =0;
-        for( int i: unitsForTheGame) {
+        int index = 0;
+        for (int i : unitsForTheGame) {
             allUnits[index] = problem.units[i];
             ++index;
         }
@@ -56,7 +56,7 @@ public class Solver {
         Board board = problem.getBoard();
         StringBuilder sb = new StringBuilder(1024);
         int unitIndex = 0;
-        while( unitIndex < unitsForTheGame.length ) {
+        while (unitIndex < unitsForTheGame.length) {
             PlayResult pr = play(board, allUnits, unitIndex, seed);
             if (pr == null || pr.sequence == null) break; // GAME OVER
             sb.append(pr.sequence);
@@ -80,7 +80,8 @@ public class Solver {
         if (!live) return null; // GAME OVER - spawn location is not valid
 
         // searching for all "locked" states for the unit
-        FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex, null);
+        final OptimalUnitPosition startPosition = new OptimalUnitPosition(spawnState, null, 0);
+        FindFinalStates findFinalStates = new FindFinalStates(board, units, currentUnitIndex, startPosition);
         ArrayList<OptimalUnitPosition> optimalUnitPositions =
                 findFinalStates.getOptimalPositionInMap(
                         MAX_BEAM_SEARCH_DEPTH,
@@ -91,27 +92,28 @@ public class Solver {
                 + ", line kills fulfulled=" + findFinalStates.isKilledLinesFulfilled());
 
         ArrayList<OptimalUnitPosition> playPositions = new ArrayList<>(3);
-        if( findFinalStates.isKilledLinesFulfilled() ) {
+        if (findFinalStates.isKilledLinesFulfilled()) {
             // using known positions sequence
 
             OptimalUnitPosition sequenceStart = null;
             for (OptimalUnitPosition position : optimalUnitPositions) {
-                if( position.next != null) {
+                if (position.next != null) {
                     sequenceStart = position;
                     break;
                 }
             }
 
-            if( sequenceStart == null ) throw new RuntimeException("failed to find sequence start for fulfulled goal");
-
-            while(sequenceStart != null ) {
-                playPositions.add(sequenceStart);
-                sequenceStart = sequenceStart.next;
+            if (sequenceStart == null) {
+                playPositions.add(startPosition.next);
+            } else {
+                while (sequenceStart != null) {
+                    playPositions.add(sequenceStart);
+                    sequenceStart = sequenceStart.next;
+                }
             }
 
             System.out.println("Sequence length to fulfull goal is " + playPositions.size());
-        }
-        else {
+        } else {
             // using best scored position
 
             // sorting on heuristic score, added score is main
@@ -132,10 +134,12 @@ public class Solver {
             spawnState = board.getSpawnState(unit);
 
             drawFrame(board, unit, currentUnitIndex, spawnState, 0, seed, null);
-            if( !board.isValid(unit, spawnState) ) throw new RuntimeException("playing sequence of positions leads to game end");
+            if (!board.isValid(unit, spawnState))
+                throw new RuntimeException("playing sequence of positions leads to game end");
 
             final ArrayList<Command> commands = UnitPositionSearcher.searchPath(board, unit, spawnState, position.state);
-            if( commands == null || commands.size() == 0) throw new RuntimeException("path to searched position not found");
+            if (commands == null || commands.size() == 0)
+                throw new RuntimeException("path to searched position not found");
 
 //            ThreeNode threeNode = findFinalStates.getAllPath(position, unit, board);
 //            if( threeNode == null) throw new RuntimeException("failed to find path to position");
