@@ -54,10 +54,6 @@ public class FindFinalStates {
                 maxKilledLines = posScore.linesKilled;
             }
 
-            if( posScore.linesKilled >= linesKilled && startPosition != null) {
-                startPosition.next = position;
-            }
-
             if (posScore.gameScore > maxScore) {
                 maxScore = posScore.gameScore;
             }
@@ -65,12 +61,16 @@ public class FindFinalStates {
             optimalUnitPositions.add(position);
         }
 
-        // updating starting position
+        // sorting positions on heuristic score
+        Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
 
-        if( maxKilledLines >= linesKilled ) {
-            // goal fulfilled
-            killedLinesFulfilled = true;
-            return optimalUnitPositions;
+        // checking if goal is fulfilled
+        for (OptimalUnitPosition position : optimalUnitPositions) {
+            if (position.posScore.linesKilled >= linesKilled) {
+                startPosition.next = position;
+                killedLinesFulfilled = true;
+                return optimalUnitPositions;
+            }
         }
 
         // can't find position to fulfill goal with this unit
@@ -79,7 +79,7 @@ public class FindFinalStates {
         if( depth > 0 && currentUnitIndex < units.length-1) {
 
             // sorting positions on heuristic score
-            Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
+//            Collections.sort(optimalUnitPositions, (o1, o2) -> o2.score - o1.score);
 
             final int countOfBestPositions = beamWidth <= 0 ?
                     optimalUnitPositions.size() :
